@@ -22,6 +22,18 @@ export default defineConfig([
     },
     rules: {
       "@typescript-eslint/no-explicit-any": "error",
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: [
+            {
+              name: "motion/react",
+              importNames: ["motion"],
+              message: "Use m.* inside LazyMotion (see README, Design system).",
+            },
+          ],
+        },
+      ],
     },
   },
   {

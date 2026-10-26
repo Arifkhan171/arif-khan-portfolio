@@ -49,7 +49,7 @@ src/
   components/
     layout/        navbar, footer, page wrapper
     sections/      hero, projects, experience, contact ...
-    ui/            small reusable pieces
+    ui/            Container, Section, Button, Badge, Card, ThemeToggle
   data/            content.ts, the single content file
   hooks/           custom hooks
   lib/             helpers and animation presets
@@ -82,6 +82,30 @@ Notes:
 - Dates are `"YYYY-MM"`. `end` can be `"present"`. Leave `period` out if the real dates are unknown.
 - A private repo is `{ visibility: "private", note: "..." }` and cannot have a URL. A public repo is `{ visibility: "public", url: "https://github.com/..." }`.
 - `npm run build` runs `validate:content` first and stops if the content has a mistake.
+
+## Design system
+
+Tokens live in `src/styles/index.css`: `:root` = light values, `.dark` = dark values, `@theme` = type scale, layout, radius.
+
+| Color class         | Use                                    |
+| ------------------- | -------------------------------------- |
+| `background`        | Page background                        |
+| `surface`           | Cards, panels                          |
+| `surface-muted`     | Subtle fills (badges, hover)           |
+| `border`            | Dividers and card borders              |
+| `foreground`        | Main text                              |
+| `muted`             | Secondary text                         |
+| `accent`            | Links, primary buttons, highlights     |
+| `accent-foreground` | Text on `accent`                       |
+| `accent-soft`       | Light accent background (metric chips) |
+| `ring`              | Keyboard focus outline                 |
+
+- **Use tokens, never raw colors.** Tailwind's default palette is switched off (`bg-zinc-900` does not exist). Never use `dark:` for colors; tokens switch by themselves.
+- Type classes: `text-display`, `text-h1`, `text-h2`, `text-h3`, `text-body`, `text-small`, `text-caption`. Metric numbers: `font-mono tabular-nums`.
+- Layout classes: `max-w-content`, `max-w-prose`, `px-gutter`, `py-section`. Shadows: `shadow-soft`, `shadow-raised`.
+- Base components are in `src/components/ui/`: `Container`, `Section`, `Button`, `Badge`, `Card`, `ThemeToggle`.
+- Theme: `useTheme()` from `src/hooks/useTheme.ts`. The storage key `portfolio-theme` and the `theme-color` values are repeated in the inline script in `index.html`; keep them in sync with `src/lib/theme.ts`.
+- Animation presets in `src/lib/animations.ts`: `fadeIn`, `fadeUp`, `stagger` + `staggerItem`, `revealOnScroll`, `hoverLift`. Use **`m.*`, not `motion.*`** (the app runs inside `LazyMotion` with `strict`; ESLint also blocks the `motion` import).
 
 ## Deployment
 
