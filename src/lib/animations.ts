@@ -18,6 +18,12 @@ export const fadeUp: Variants = {
   visible: { opacity: 1, y: 0, transition: { duration: duration.slow, ease: easeOut } },
 };
 
+/** Panel that drops down a little (mobile menu). States: hidden (also the exit), visible. */
+export const dropDown: Variants = {
+  hidden: { opacity: 0, y: -8, transition: { duration: duration.fast, ease: easeOut } },
+  visible: { opacity: 1, y: 0, transition: { duration: duration.base, ease: easeOut } },
+};
+
 /** Parent of a list or grid: children appear one after another. */
 export const stagger: Variants = {
   hidden: {},
@@ -53,10 +59,14 @@ const fadeOnly: Variants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: duration.base, ease: easeOut } },
 };
+const dropDownFade: Variants = {
+  hidden: { opacity: 0, transition: { duration: duration.fast, ease: easeOut } },
+  visible: { opacity: 1, transition: { duration: duration.fast, ease: easeOut } },
+};
 const noLift: Pick<HTMLMotionProps<"div">, "whileHover" | "whileTap" | "transition"> = {};
 
 /**
- * Presets for components. Use these instead of importing `fadeUp`, `staggerItem` and `hoverLift`
+ * Presets for components. Use these instead of importing `fadeUp`, `staggerItem`, `hoverLift` and `dropDown`
  * directly: with "reduce motion" on, nothing moves (opacity fades only).
  */
 export function useMotionPresets() {
@@ -66,5 +76,6 @@ export function useMotionPresets() {
     fadeUp: reduced ? fadeOnly : fadeUp,
     staggerItem: reduced ? fadeOnly : staggerItem,
     hoverLift: reduced ? noLift : hoverLift,
+    dropDown: reduced ? dropDownFade : dropDown,
   };
 }

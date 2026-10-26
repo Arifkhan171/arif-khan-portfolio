@@ -6,22 +6,16 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
-import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { SiteLayout } from "@/components/layout/SiteLayout";
 
-// Temporary design preview. Checks the design system by eye; Spec 05 replaces it.
+// Temporary design preview and placeholder sections. Spec 05 replaces the preview; Specs 05-09 replace the placeholders.
 export default function App() {
-  const { profile, projects } = content;
+  const { profile, projects, navigation } = content;
   const { fadeUp, staggerItem } = useMotionPresets();
   const project = projects.find((p) => p.tier === "featured");
 
   return (
-    <main>
-      <Container className="pt-6">
-        <div className="flex justify-end">
-          <ThemeToggle />
-        </div>
-      </Container>
-
+    <SiteLayout>
       <Container className="py-section">
         <m.div variants={fadeUp} initial="hidden" animate="visible">
           <h1 className="text-display">{profile.name}</h1>
@@ -88,6 +82,12 @@ export default function App() {
           </p>
         </Section>
       )}
-    </main>
+
+      {navigation.map((item) => (
+        <Section key={item.id} id={item.id} title={item.label} className="min-h-[60vh]">
+          <p className="text-muted">This section is coming soon.</p>
+        </Section>
+      ))}
+    </SiteLayout>
   );
 }

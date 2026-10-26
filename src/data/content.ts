@@ -30,6 +30,7 @@ export const content = {
     links: {
       github: GITHUB,
       linkedin: "https://www.linkedin.com/in/arif-khan-ai-engineer",
+      cv: { href: "/cv/Arif-Khan-CV.pdf", fileName: "Arif-Khan-CV.pdf" },
     },
     stats: [
       { value: "7,021", label: "documents indexed in production RAG" },
@@ -38,6 +39,15 @@ export const content = {
       { value: "0.85", label: "RAGAS faithfulness (up from 0.75)" },
     ],
   },
+
+  // ---------------------------------------------------------- navigation
+  // Navbar links, in order. Each id must match a section id on the page.
+  navigation: [
+    { id: "projects", label: "Projects" },
+    { id: "experience", label: "Experience" },
+    { id: "skills", label: "Skills" },
+    { id: "contact", label: "Contact" },
+  ],
 
   // ------------------------------------------------------------ projects
   projects: [

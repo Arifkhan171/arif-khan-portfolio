@@ -4,7 +4,7 @@ import { existsSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { content } from "../src/data/content.ts";
-import type { Period, Project, YearMonth } from "../src/types/content.ts";
+import type { NavItem, Period, Project, YearMonth } from "../src/types/content.ts";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const errors: string[] = [];
@@ -89,11 +89,36 @@ content.education.forEach((item, i) => {
   checkPeriod(`education[${i}].period`, item.period);
 });
 
+const RESERVED_IDS = new Set(["main", "top"]);
+const navigation: readonly NavItem[] = content.navigation;
+const navIds = new Set<string>();
+if (navigation.length === 0) fail("navigation", "must not be empty");
+navigation.forEach((item, i) => {
+  const where = `navigation[${item.id || i}]`;
+  if (!SLUG.test(item.id)) fail(where, `id "${item.id}" is not a lowercase slug`);
+  if (navIds.has(item.id)) fail(where, "duplicate id");
+  navIds.add(item.id);
+  if (RESERVED_IDS.has(item.id)) fail(where, `id "${item.id}" is reserved`);
+  if (item.label.trim() === "") fail(where, "label is empty");
+});
+
+const cv = content.profile.links.cv;
+if (!cv.href.startsWith("/cv/") || !cv.href.endsWith(".pdf")) {
+  fail("profile.links.cv", `href "${cv.href}" must start with /cv/ and end with .pdf`);
+} else if (!existsSync(resolve(root, "public", cv.href.slice(1)))) {
+  fail("profile.links.cv", `file not found: public${cv.href}`);
+}
+if (!cv.fileName.endsWith(".pdf") || /[\\/]/.test(cv.fileName)) {
+  fail("profile.links.cv", `fileName "${cv.fileName}" must end with .pdf and contain no slash`);
+}
+
 if (errors.length > 0) {
   console.error(errors.join("\n"));
   console.error(`\n${errors.length} content error(s) found.`);
   process.exitCode = 1;
 } else {
   const imageCount = projects.reduce((sum, project) => sum + project.images.length, 0);
-  console.log(`✓ Content is valid (${projects.length} projects, ${imageCount} images)`);
+  console.log(
+    `✓ Content is valid (${projects.length} projects, ${imageCount} images, ${navigation.length} nav items, CV found)`,
+  );
 }

@@ -47,9 +47,9 @@ scripts/           validate-content.ts (checks the content file)
 public/            static files (favicon, images/projects, cv)
 src/
   components/
-    layout/        navbar, footer, page wrapper
+    layout/        SkipLink, Navbar, MobileMenu, Footer, SiteLayout
     sections/      hero, projects, experience, contact ...
-    ui/            Container, Section, Button, Badge, Card, ThemeToggle
+    ui/            Container, Section, Button, Badge, Card, ThemeToggle, icons
   data/            content.ts, the single content file
   hooks/           custom hooks
   lib/             helpers and animation presets
@@ -83,6 +83,17 @@ Notes:
 - A private repo is `{ visibility: "private", note: "..." }` and cannot have a URL. A public repo is `{ visibility: "public", url: "https://github.com/..." }`.
 - `npm run build` runs `validate:content` first and stops if the content has a mistake.
 
+Navigation:
+
+- Edit `navigation` in `src/data/content.ts`. The order is the order in the navbar.
+- `id` is a lowercase slug, unique, and not `main` or `top`. The section on the page must use the same id (`<Section id="...">`). Until Specs 05–09 are done, a placeholder section appears for each item automatically.
+- Run `npm run validate:content`.
+
+CV:
+
+- The download file is `public/cv/Arif-Khan-CV.pdf`. To update the CV, replace that file with a new PDF of the same name.
+- If the file name changes, update `profile.links.cv` (`href` and `fileName`). The validator checks that the file exists.
+
 ## Design system
 
 Tokens live in `src/styles/index.css`: `:root` = light values, `.dark` = dark values, `@theme` = type scale, layout, radius.
@@ -103,9 +114,10 @@ Tokens live in `src/styles/index.css`: `:root` = light values, `.dark` = dark va
 - **Use tokens, never raw colors.** Tailwind's default palette is switched off (`bg-zinc-900` does not exist). Never use `dark:` for colors; tokens switch by themselves.
 - Type classes: `text-display`, `text-h1`, `text-h2`, `text-h3`, `text-body`, `text-small`, `text-caption`. Metric numbers: `font-mono tabular-nums`.
 - Layout classes: `max-w-content`, `max-w-prose`, `px-gutter`, `py-section`. Shadows: `shadow-soft`, `shadow-raised`.
-- Base components are in `src/components/ui/`: `Container`, `Section`, `Button`, `Badge`, `Card`, `ThemeToggle`.
+- Base components are in `src/components/ui/`: `Container`, `Section`, `Button`, `Badge`, `Card`, `ThemeToggle`. Icons are inline SVG in `icons.tsx` (`currentColor`, `size` prop, `aria-hidden`); there is no icon library.
+- Layout: `SiteLayout` (skip link, navbar, `<main id="main">`, footer). The navbar height is the token `h-header` / `--spacing-header`.
 - Theme: `useTheme()` from `src/hooks/useTheme.ts`. The storage key `portfolio-theme` and the `theme-color` values are repeated in the inline script in `index.html`; keep them in sync with `src/lib/theme.ts`.
-- Animation presets in `src/lib/animations.ts`: `fadeIn`, `fadeUp`, `stagger` + `staggerItem`, `revealOnScroll`, `hoverLift`. Use **`m.*`, not `motion.*`** (the app runs inside `LazyMotion` with `strict`; ESLint also blocks the `motion` import).
+- Animation presets in `src/lib/animations.ts`: `fadeIn`, `fadeUp`, `stagger` + `staggerItem`, `revealOnScroll`, `hoverLift`, `dropDown`. **Get `fadeUp`, `staggerItem`, `hoverLift` and `dropDown` from `useMotionPresets()`, never import them directly**: with reduced motion they become opacity-only. Use **`m.*`, not `motion.*`** (the app runs inside `LazyMotion` with `strict`; ESLint also blocks the `motion` import).
 
 ## Deployment
 

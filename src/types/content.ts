@@ -25,6 +25,12 @@ export type SiteMeta = {
   readonly language: string;
 };
 
+/** One navbar link. `id` is the section's anchor id (lowercase slug). */
+export type NavItem = { readonly id: string; readonly label: string };
+
+/** A file under public/ that the browser downloads. */
+export type CvLink = { readonly href: string; readonly fileName: string };
+
 export type Profile = {
   readonly name: string;
   readonly title: string;
@@ -38,6 +44,7 @@ export type Profile = {
   readonly links: {
     readonly github: string;
     readonly linkedin: string;
+    readonly cv: CvLink;
   };
   /** Headline numbers for the hero section. */
   readonly stats: readonly Stat[];
@@ -126,6 +133,7 @@ export type SkillGroup = {
 export type SiteContent = {
   readonly site: SiteMeta;
   readonly profile: Profile;
+  readonly navigation: readonly NavItem[];
   readonly projects: readonly Project[];
   readonly experience: readonly Experience[];
   readonly education: readonly Education[];
