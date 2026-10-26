@@ -89,7 +89,7 @@ content.education.forEach((item, i) => {
   checkPeriod(`education[${i}].period`, item.period);
 });
 
-const RESERVED_IDS = new Set(["main", "top"]);
+const RESERVED_IDS = new Set(["main", "top", "hero"]);
 const navigation: readonly NavItem[] = content.navigation;
 const navIds = new Set<string>();
 if (navigation.length === 0) fail("navigation", "must not be empty");
@@ -110,6 +110,32 @@ if (!cv.href.startsWith("/cv/") || !cv.href.endsWith(".pdf")) {
 }
 if (!cv.fileName.endsWith(".pdf") || /[\\/]/.test(cv.fileName)) {
   fail("profile.links.cv", `fileName "${cv.fileName}" must end with .pdf and contain no slash`);
+}
+
+// Hero section (Spec 05): the layout is built for exactly 4 stats; the rest is derived from content.
+const stats = content.profile.stats;
+if (stats.length !== 4) fail("profile.stats", `must have exactly 4 items (found ${stats.length})`);
+stats.forEach((stat, i) => {
+  if (stat.value.trim() === "" || stat.label.trim() === "") {
+    fail(`profile.stats[${i}]`, "value and label must not be empty");
+  }
+});
+const experienceCount: number = content.experience.length;
+if (experienceCount === 0) fail("experience", "must not be empty (hero Currently line)");
+const heroProject = projects
+  .filter((p) => p.tier === "featured")
+  .toSorted((a, b) => a.order - b.order)[0];
+if (heroProject === undefined) {
+  fail("projects", "needs a featured project (hero pipeline card)");
+} else {
+  const steps = heroProject.architecture ?? [];
+  if (steps.length < 3 || steps.some((step) => step.trim() === "")) {
+    fail(
+      `projects[${heroProject.id}]`,
+      "hero project needs at least 3 non-empty architecture steps",
+    );
+  }
+  if (heroProject.subtitle.trim() === "") fail(`projects[${heroProject.id}]`, "subtitle is empty");
 }
 
 if (errors.length > 0) {

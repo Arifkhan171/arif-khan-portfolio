@@ -64,6 +64,8 @@ input/             source material (CV, LinkedIn export). Never part of the buil
 
 All personal text lives in **one file**: `src/data/content.ts`. The shapes are in `src/types/content.ts`. Do not write personal text inside components.
 
+The hero (`src/components/sections/Hero.tsx`) reads: `profile` (name, title, tagline, availability, location, `stats` — exactly 4, links), the first item of `experience` (the "Currently" line) and the first `featured` project by `order` (its `title`, `subtitle` and `architecture` steps fill the "How it works" card).
+
 Add a project:
 
 1. Copy an existing project object in `projects` in `src/data/content.ts`. Give it a new lowercase `id` (for example `my-new-project`).

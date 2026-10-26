@@ -74,6 +74,24 @@ export function ArrowUpIcon(props: IconProps) {
   );
 }
 
+export function ArrowRightIcon(props: IconProps) {
+  return (
+    <Svg {...stroke} {...props}>
+      <path d="M5 12h14" />
+      <path d="m12 5 7 7-7 7" />
+    </Svg>
+  );
+}
+
+export function MapPinIcon(props: IconProps) {
+  return (
+    <Svg {...stroke} {...props}>
+      <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z" />
+      <circle cx="12" cy="10" r="3" />
+    </Svg>
+  );
+}
+
 // Path: Simple Icons (simpleicons.org), CC0 1.0
 export function GitHubIcon(props: IconProps) {
   return (

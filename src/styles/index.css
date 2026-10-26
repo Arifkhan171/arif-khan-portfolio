@@ -42,6 +42,7 @@
   --accent-soft: oklch(0.948 0.026 290);
   --ring: oklch(0.56 0.2 290);
   --selection-mix: 22%;
+  --glow-mix: 14%;
   --shadow-soft-value: 0 1px 2px oklch(0.2 0.02 265 / 0.05), 0 2px 8px oklch(0.2 0.02 265 / 0.04);
   --shadow-raised-value:
     0 2px 4px oklch(0.2 0.02 265 / 0.05), 0 12px 32px oklch(0.2 0.02 265 / 0.08);
@@ -60,6 +61,7 @@
   --accent-soft: oklch(0.27 0.065 290);
   --ring: oklch(0.73 0.15 290);
   --selection-mix: 35%;
+  --glow-mix: 22%;
   --shadow-soft-value: inset 0 1px 0 oklch(1 0 0 / 0.04);
   --shadow-raised-value:
     inset 0 1px 0 oklch(1 0 0 / 0.06), 0 0 0 1px oklch(0.73 0.15 290 / 0.18),
@@ -91,6 +93,10 @@
   --text-h3--line-height: 1.3;
   --text-h3--letter-spacing: -0.01em;
   --text-h3--font-weight: 600;
+  --text-lead: clamp(1.0625rem, 1rem + 0.35vw, 1.25rem);
+  --text-lead--line-height: 1.6;
+  --text-lead--letter-spacing: -0.005em;
+  --text-lead--font-weight: 400;
   --text-body: 1rem;
   --text-body--line-height: 1.65;
   --text-body--letter-spacing: 0;
@@ -176,6 +182,26 @@
     outline: 2px solid var(--ring);
     outline-offset: 2px;
   }
+}
+
+/* Faint 48 px grid in the border color, fading out towards the bottom and the sides. */
+@utility bg-grid {
+  background-image:
+    linear-gradient(to right, var(--border) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+  background-size: 48px 48px;
+  background-position: center top;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, black 30%, transparent 75%);
+}
+
+/* Soft accent glow: a radial gradient, no blur filter, no image. */
+@utility hero-glow {
+  border-radius: 9999px;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in oklab, var(--accent) var(--glow-mix), transparent),
+    transparent
+  );
 }
 
 /* Added to <html> for 200 ms after a theme change, never on first load (see src/lib/theme.ts). */
