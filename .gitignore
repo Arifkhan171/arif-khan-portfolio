@@ -1,0 +1,31 @@
+# Dependencies and build output
+node_modules/
+dist/
+.vercel/
+
+# Private source material and supervisor notes (never published)
+input/
+.claude/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+
+# TypeScript build info
+*.tsbuildinfo
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor files
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp

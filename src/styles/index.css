@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+/* Class-based dark mode: a `dark` class on <html> turns on `dark:` utilities. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+}
