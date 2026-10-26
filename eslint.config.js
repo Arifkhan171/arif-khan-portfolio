@@ -24,5 +24,9 @@ export default defineConfig([
       "@typescript-eslint/no-explicit-any": "error",
     },
   },
+  {
+    files: ["scripts/**/*.ts"],
+    languageOptions: { globals: globals.node },
+  },
   eslintConfigPrettier,
 ]);

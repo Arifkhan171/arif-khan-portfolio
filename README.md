@@ -17,6 +17,7 @@ npm run preview    # serve the production build locally
 npm run lint       # ESLint (zero warnings allowed)
 npm run format     # Prettier
 npm run typecheck  # TypeScript check, no output
+npm run validate:content  # check content.ts (runs first in build)
 ```
 
 ## Tech stack (installed versions)
@@ -42,25 +43,45 @@ Notes:
 ## Folder structure
 
 ```
+scripts/           validate-content.ts (checks the content file)
 public/            static files (favicon, images/projects, cv)
 src/
   components/
     layout/        navbar, footer, page wrapper
     sections/      hero, projects, experience, contact ...
     ui/            small reusable pieces
-  data/            the single content file (from Spec 02)
+  data/            content.ts, the single content file
   hooks/           custom hooks
   lib/             helpers and animation presets
-  types/           shared TypeScript types
+  types/           content.ts, the shapes of all content
   styles/index.css Tailwind import and base styles
   App.tsx, main.tsx
 input/             source material (CV, LinkedIn export). Never part of the build.
 .claude/           specs, plans and project status
 ```
 
-## Content
+## Editing content
 
-All site content will live in `src/data/` (from Spec 02). To add a project, edit only that file.
+All personal text lives in **one file**: `src/data/content.ts`. The shapes are in `src/types/content.ts`. Do not write personal text inside components.
+
+Add a project:
+
+1. Copy an existing project object in `projects` in `src/data/content.ts`. Give it a new lowercase `id` (for example `my-new-project`).
+2. Choose its `tier` and an `order` (unique inside the tier).
+3. Put images in `public/images/projects/<id>/` as `.webp` (max 1600 px wide, max 250 KB) and list them in `images`. The first image is the cover.
+4. Run `npm run validate:content` and `npm run typecheck`.
+
+Tiers:
+
+- `featured`: the main case studies. They need a period, problem, role, images, metrics and a video.
+- `other`: smaller complete projects shown as cards. They need a role and a problem.
+- `learning`: practice repositories shown as a short list. Only title, summary, tech and repo are needed.
+
+Notes:
+
+- Dates are `"YYYY-MM"`. `end` can be `"present"`. Leave `period` out if the real dates are unknown.
+- A private repo is `{ visibility: "private", note: "..." }` and cannot have a URL. A public repo is `{ visibility: "public", url: "https://github.com/..." }`.
+- `npm run build` runs `validate:content` first and stops if the content has a mistake.
 
 ## Deployment
 

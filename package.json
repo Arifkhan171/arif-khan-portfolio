@@ -5,11 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "npm run validate:content && tsc -b && vite build",
     "preview": "vite preview",
     "lint": "eslint . --max-warnings 0",
     "format": "prettier --write .",
-    "typecheck": "tsc -b"
+    "typecheck": "tsc -b",
+    "validate:content": "node scripts/validate-content.ts"
   },
   "dependencies": {
     "motion": "^14.6.0",
