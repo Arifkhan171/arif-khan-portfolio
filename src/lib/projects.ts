@@ -13,3 +13,8 @@ export function projectAnchorId(id: string): string {
 export function youtubeWatchUrl(youtubeId: string): string {
   return `https://www.youtube.com/watch?v=${youtubeId}`;
 }
+
+/** URL of a featured project's case study page, e.g. "/projects/neuroai". */
+export function projectPath(id: string): string {
+  return `/projects/${id}`;
+}

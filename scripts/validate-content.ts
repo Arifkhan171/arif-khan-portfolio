@@ -55,8 +55,17 @@ function checkProject(project: Project, index: number): void {
 
   if (project.tier === "featured") {
     need(project.period !== undefined, "a period");
-    need(Boolean(project.problem), "a problem");
+    need((project.problem ?? "").trim() !== "", "a non-empty problem");
     need(Boolean(project.role), "a role");
+    need(
+      project.highlights.filter((h) => h.trim() !== "").length >= 2,
+      "at least 2 non-empty highlights",
+    );
+    const steps = project.architecture ?? [];
+    need(
+      steps.length >= 3 && steps.every((step) => step.trim() !== ""),
+      "at least 3 non-empty architecture steps",
+    );
     need(project.images.length > 0, "at least one image");
     need(project.metrics.length > 0, "at least one metric");
     need(project.video !== undefined, "a video");
@@ -174,13 +183,6 @@ const heroProject = projects
 if (heroProject === undefined) {
   fail("projects", "needs a featured project (hero pipeline card)");
 } else {
-  const steps = heroProject.architecture ?? [];
-  if (steps.length < 3 || steps.some((step) => step.trim() === "")) {
-    fail(
-      `projects[${heroProject.id}]`,
-      "hero project needs at least 3 non-empty architecture steps",
-    );
-  }
   if (heroProject.subtitle.trim() === "") fail(`projects[${heroProject.id}]`, "subtitle is empty");
 }
 

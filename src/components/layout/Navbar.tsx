@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { content } from "@/data/content";
 import { useActiveSection } from "@/hooks/useActiveSection";
+import { usePathname } from "@/lib/router";
 import { cn } from "@/lib/cn";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
@@ -18,7 +19,9 @@ export function Navbar({ scrolled }: { scrolled: boolean }) {
   const headerRef = useRef<HTMLElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
-  const active = useActiveSection(navigation.map((item) => item.id));
+  const home = usePathname() === "/";
+  const sectionActive = useActiveSection(home ? navigation.map((item) => item.id) : []);
+  const active = home ? sectionActive : null;
 
   // Close before the browser runs the anchor scroll, so the page is unlocked when it starts.
   const closeNow = useCallback(() => flushSync(() => setOpen(false)), []);
@@ -70,7 +73,7 @@ export function Navbar({ scrolled }: { scrolled: boolean }) {
         <nav aria-label="Main" className="h-full">
           <Container className="flex h-full items-center justify-between gap-4">
             <a
-              href="#top"
+              href="/#top"
               onClick={closeNow}
               className="inline-flex h-11 items-center rounded-md text-small font-semibold"
             >
@@ -84,7 +87,7 @@ export function Navbar({ scrolled }: { scrolled: boolean }) {
                   return (
                     <li key={item.id}>
                       <a
-                        href={`#${item.id}`}
+                        href={`/#${item.id}`}
                         aria-current={isActive ? "true" : undefined}
                         className={cn(
                           "inline-flex h-9 items-center rounded-md px-3 text-small text-muted transition-colors hover:bg-surface-muted hover:text-foreground",

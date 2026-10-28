@@ -66,6 +66,8 @@ All personal text lives in **one file**: `src/data/content.ts`. The shapes are i
 
 The hero (`src/components/sections/Hero.tsx`) reads: `profile` (name, title, tagline, availability, location, `stats` — exactly 4, links), the first item of `experience` (the "Currently" line) and the first `featured` project by `order` (its `title`, `subtitle` and `architecture` steps fill the "How it works" card).
 
+Every `featured` project also gets a case study page at `/projects/<id>`. It needs a non-empty `problem`, at least 2 `highlights` and at least 3 `architecture` steps (the build checks this).
+
 Add a project:
 
 1. Copy an existing project object in `projects` in `src/data/content.ts`. Give it a new lowercase `id` (for example `my-new-project`).

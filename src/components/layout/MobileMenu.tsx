@@ -56,7 +56,7 @@ function Panel({ panelRef, active, onNavigate }: Omit<MobileMenuProps, "open">) 
             <li key={item.id}>
               <a
                 ref={index === 0 ? firstLinkRef : undefined}
-                href={`#${item.id}`}
+                href={`/#${item.id}`}
                 onClick={onNavigate}
                 aria-current={active === item.id ? "true" : undefined}
                 className={cn(

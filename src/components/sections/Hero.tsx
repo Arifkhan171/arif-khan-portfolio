@@ -2,21 +2,18 @@ import { m, type Variants } from "motion/react";
 import { content } from "@/data/content";
 import { formatPeriod } from "@/lib/format";
 import { useMotionPresets } from "@/lib/animations";
-import { getFeaturedProjects, projectAnchorId } from "@/lib/projects";
+import { getFeaturedProjects, projectPath } from "@/lib/projects";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { InlineSep } from "@/components/ui/InlineSep";
 import { ArrowRightIcon, DownloadIcon, MapPinIcon } from "@/components/ui/icons";
 import { SocialLinks } from "@/components/layout/SocialLinks";
+import { PipelineSteps } from "@/components/sections/PipelineSteps";
 import { HeroBackdrop } from "@/components/sections/HeroBackdrop";
 
 // Containers only change timing (no position), so they are safe with reduced motion.
 const heroStagger: Variants = { hidden: {}, visible: { transition: { staggerChildren: 0.05 } } };
-const stepsStagger: Variants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.03 } },
-};
 
 const { profile, projects, experience } = content;
 const current = experience[0];
@@ -142,27 +139,11 @@ export function Hero() {
               </h2>
               <p className="mt-0.5 text-small text-muted">{heroProject.subtitle}</p>
 
-              <m.ol variants={stepsStagger} className="mt-5">
-                {steps.map((step, i) => (
-                  <m.li
-                    key={`${i}-${step}`}
-                    variants={staggerItem}
-                    className="relative grid grid-cols-[1.75rem_minmax(0,1fr)] gap-x-3 pb-3 before:absolute before:top-8 before:bottom-1 before:left-[calc(0.875rem-0.5px)] before:w-px before:bg-border last:pb-0 last:before:hidden"
-                  >
-                    <span
-                      aria-hidden="true"
-                      className="flex size-7 items-center justify-center rounded-full bg-accent-soft font-mono text-caption tabular-nums text-accent"
-                    >
-                      {i + 1}
-                    </span>
-                    <span className="pt-1 text-small">{step}</span>
-                  </m.li>
-                ))}
-              </m.ol>
+              <PipelineSteps steps={steps} className="mt-5" />
 
               <div className="mt-5 border-t border-border pt-1">
                 <a
-                  href={`#${projectAnchorId(heroProject.id)}`}
+                  href={projectPath(heroProject.id)}
                   className="inline-flex h-11 items-center gap-1.5 text-small font-medium text-accent underline-offset-4 hover:underline"
                 >
                   See the project

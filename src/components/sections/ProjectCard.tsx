@@ -2,7 +2,7 @@ import { m } from "motion/react";
 import type { Project } from "@/types/content";
 import { formatPeriod } from "@/lib/format";
 import { revealOnScroll, useMotionPresets } from "@/lib/animations";
-import { projectAnchorId, youtubeWatchUrl } from "@/lib/projects";
+import { projectAnchorId, projectPath, youtubeWatchUrl } from "@/lib/projects";
 import { cn } from "@/lib/cn";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
@@ -43,15 +43,22 @@ export function ProjectCard({ project, variant }: ProjectCardProps) {
         )}
       >
         {cover && (
-          <img
-            src={cover.src}
-            alt={cover.alt}
-            width={cover.width}
-            height={cover.height}
-            loading="lazy"
-            decoding="async"
-            className="aspect-[2/1] w-full rounded-md border border-border bg-surface-muted object-cover object-top lg:col-start-1 lg:row-start-1"
-          />
+          <a
+            href={projectPath(project.id)}
+            tabIndex={-1}
+            aria-hidden="true"
+            className="block rounded-md lg:col-start-1 lg:row-start-1"
+          >
+            <img
+              src={cover.src}
+              alt={cover.alt}
+              width={cover.width}
+              height={cover.height}
+              loading="lazy"
+              decoding="async"
+              className="aspect-[2/1] w-full rounded-md border border-border bg-surface-muted object-cover object-top transition-[border-color,box-shadow] hover:border-accent/50 hover:shadow-raised"
+            />
+          </a>
         )}
 
         <div className={cn("mt-5", lead && "lg:col-start-2 lg:row-start-1 lg:mt-0")}>
@@ -115,6 +122,10 @@ export function ProjectCard({ project, variant }: ProjectCardProps) {
 
           <div className="mt-auto pt-5">
             <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-border pt-4">
+              <Button href={projectPath(project.id)}>
+                Read case study
+                <span className="sr-only">: {project.title}</span>
+              </Button>
               {project.video && (
                 <Button variant="secondary" href={youtubeWatchUrl(project.video.youtubeId)}>
                   <PlayIcon size={16} />
