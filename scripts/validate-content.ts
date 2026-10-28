@@ -1,6 +1,6 @@
 // Checks src/data/content.ts for mistakes TypeScript cannot catch.
 // Run: npm run validate:content (also runs first in `npm run build`).
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { content } from "../src/data/content.ts";
@@ -13,6 +13,7 @@ const fail = (where: string, message: string): void => {
 };
 
 const SLUG = /^[a-z0-9]+(-[a-z0-9]+)*$/;
+const YOUTUBE_ID = /^[A-Za-z0-9_-]{11}$/;
 const YEAR_MONTH = /^\d{4}-(0[1-9]|1[0-2])$/;
 
 function checkPeriod(where: string, period: Period): void {
@@ -24,6 +25,24 @@ function checkPeriod(where: string, period: Period): void {
   if (startOk && endOk && period.end !== "present" && period.start > (period.end as YearMonth)) {
     fail(where, `start ${period.start} is after end ${period.end}`);
   }
+}
+
+/** Reads the pixel size from a WebP header (lossy "VP8 ", lossless "VP8L" or extended "VP8X"). */
+function webpSize(file: Buffer): { width: number; height: number } | undefined {
+  if (file.length < 30 || file.toString("ascii", 0, 4) !== "RIFF") return undefined;
+  if (file.toString("ascii", 8, 12) !== "WEBP") return undefined;
+  const kind = file.toString("ascii", 12, 16);
+  if (kind === "VP8 ") {
+    return { width: file.readUInt16LE(26) & 0x3fff, height: file.readUInt16LE(28) & 0x3fff };
+  }
+  if (kind === "VP8L") {
+    const bits = file.readUInt32LE(21);
+    return { width: (bits & 0x3fff) + 1, height: ((bits >> 14) & 0x3fff) + 1 };
+  }
+  if (kind === "VP8X") {
+    return { width: file.readUIntLE(24, 3) + 1, height: file.readUIntLE(27, 3) + 1 };
+  }
+  return undefined;
 }
 
 function checkProject(project: Project, index: number): void {
@@ -41,6 +60,7 @@ function checkProject(project: Project, index: number): void {
     need(project.images.length > 0, "at least one image");
     need(project.metrics.length > 0, "at least one metric");
     need(project.video !== undefined, "a video");
+    need(project.summary.trim() !== "", "a summary");
   } else if (project.tier === "other") {
     need(Boolean(project.problem), "a problem");
     need(Boolean(project.role), "a role");
@@ -56,8 +76,31 @@ function checkProject(project: Project, index: number): void {
       fail(at, `src "${image.src}" must start with ${prefix} and end with .webp`);
     } else if (!existsSync(resolve(root, "public", image.src.slice(1)))) {
       fail(at, `file not found: public${image.src}`);
+    } else if (Number.isInteger(image.width) && Number.isInteger(image.height)) {
+      const real = webpSize(readFileSync(resolve(root, "public", image.src.slice(1))));
+      if (real === undefined) {
+        fail(at, "not a valid WebP file");
+      } else if (real.width !== image.width || real.height !== image.height) {
+        fail(
+          at,
+          `width/height ${image.width}×${image.height} do not match the file (${real.width}×${real.height})`,
+        );
+      }
+    }
+    if (!Number.isInteger(image.width) || image.width <= 0) {
+      fail(at, `width "${image.width}" must be a positive integer`);
+    }
+    if (!Number.isInteger(image.height) || image.height <= 0) {
+      fail(at, `height "${image.height}" must be a positive integer`);
     }
   });
+
+  if (project.video !== undefined && !YOUTUBE_ID.test(project.video.youtubeId)) {
+    fail(
+      `${where}.video`,
+      `youtubeId "${project.video.youtubeId}" must be 11 characters of A-Z a-z 0-9 _ -`,
+    );
+  }
 
   if (project.repo.visibility === "public" && !project.repo.url.startsWith("https://github.com/")) {
     fail(`${where}.repo`, `url "${project.repo.url}" must start with https://github.com/`);
@@ -101,6 +144,9 @@ navigation.forEach((item, i) => {
   if (RESERVED_IDS.has(item.id)) fail(where, `id "${item.id}" is reserved`);
   if (item.label.trim() === "") fail(where, "label is empty");
 });
+
+if (!navIds.has("projects"))
+  fail("navigation", 'needs an item with id "projects" (featured projects)');
 
 const cv = content.profile.links.cv;
 if (!cv.href.startsWith("/cv/") || !cv.href.endsWith(".pdf")) {

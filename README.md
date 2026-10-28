@@ -70,7 +70,7 @@ Add a project:
 
 1. Copy an existing project object in `projects` in `src/data/content.ts`. Give it a new lowercase `id` (for example `my-new-project`).
 2. Choose its `tier` and an `order` (unique inside the tier).
-3. Put images in `public/images/projects/<id>/` as `.webp` (max 1600 px wide, max 250 KB) and list them in `images`. The first image is the cover.
+3. Put images in `public/images/projects/<id>/` as `.webp` (max 1600 px wide, max 250 KB) and list them in `images`. The first image is the cover. Each image needs its real `width` and `height` in pixels (the validator checks them against the file).
 4. Run `npm run validate:content` and `npm run typecheck`.
 
 Tiers:

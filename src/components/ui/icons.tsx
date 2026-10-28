@@ -92,6 +92,23 @@ export function MapPinIcon(props: IconProps) {
   );
 }
 
+export function PlayIcon(props: IconProps) {
+  return (
+    <Svg {...stroke} {...props}>
+      <path d="M6 4v16l14-8z" />
+    </Svg>
+  );
+}
+
+export function LockIcon(props: IconProps) {
+  return (
+    <Svg {...stroke} {...props}>
+      <rect x="4" y="11" width="16" height="10" rx="2" />
+      <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+    </Svg>
+  );
+}
+
 // Path: Simple Icons (simpleicons.org), CC0 1.0
 export function GitHubIcon(props: IconProps) {
   return (

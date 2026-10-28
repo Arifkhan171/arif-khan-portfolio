@@ -2,9 +2,11 @@ import { m, type Variants } from "motion/react";
 import { content } from "@/data/content";
 import { formatPeriod } from "@/lib/format";
 import { useMotionPresets } from "@/lib/animations";
+import { getFeaturedProjects, projectAnchorId } from "@/lib/projects";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
+import { InlineSep } from "@/components/ui/InlineSep";
 import { ArrowRightIcon, DownloadIcon, MapPinIcon } from "@/components/ui/icons";
 import { SocialLinks } from "@/components/layout/SocialLinks";
 import { HeroBackdrop } from "@/components/sections/HeroBackdrop";
@@ -18,25 +20,8 @@ const stepsStagger: Variants = {
 
 const { profile, projects, experience } = content;
 const current = experience[0];
-const heroProject = projects
-  .filter((p) => p.tier === "featured")
-  .toSorted((a, b) => a.order - b.order)[0];
+const heroProject = getFeaturedProjects(projects)[0];
 const steps = heroProject?.architecture ?? [];
-
-/**
- * Visible dot between parts of the "Currently" line; screen readers get a comma pause instead.
- * The trailing space is the only place the line may wrap, so each part stays whole.
- */
-function Sep() {
-  return (
-    <>
-      <span aria-hidden="true" className="ml-1.5">
-        ·
-      </span>
-      <span className="sr-only">, </span>{" "}
-    </>
-  );
-}
 
 export function Hero() {
   const { staggerItem } = useMotionPresets();
@@ -87,9 +72,9 @@ export function Hero() {
               <m.p variants={staggerItem} className="mt-6 text-small text-muted">
                 <span className="font-medium text-foreground">Currently:</span>{" "}
                 <span className="whitespace-nowrap">{current.role}</span>
-                <Sep />
+                <InlineSep />
                 <span className="whitespace-nowrap">{current.organization}</span>
-                <Sep />
+                <InlineSep />
                 <span className="font-mono text-caption whitespace-nowrap tabular-nums">
                   {formatPeriod(current.period)}
                 </span>
@@ -177,7 +162,7 @@ export function Hero() {
 
               <div className="mt-5 border-t border-border pt-1">
                 <a
-                  href="#projects"
+                  href={`#${projectAnchorId(heroProject.id)}`}
                   className="inline-flex h-11 items-center gap-1.5 text-small font-medium text-accent underline-offset-4 hover:underline"
                 >
                   See the project

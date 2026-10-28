@@ -105,11 +105,15 @@ export const content = {
       images: [
         {
           src: "/images/projects/uoli-ai-assistant/01-chat-welcome.webp",
+          width: 1584,
+          height: 718,
           alt: "UOLI AI Assistant chat interface welcome screen",
           caption: "University-branded chat UI with session history and live system status",
         },
         {
           src: "/images/projects/uoli-ai-assistant/02-multi-turn-qa.webp",
+          width: 1579,
+          height: 786,
           alt: "Multi-turn conversation answering university questions",
           caption: "Multi-turn answers on admissions, fees and faculty from 7,021 documents",
         },
@@ -158,36 +162,50 @@ export const content = {
       images: [
         {
           src: "/images/projects/neuroai/01-mri-viewer.webp",
+          width: 1600,
+          height: 704,
           alt: "Three-plane MRI viewer with tumor overlay",
           caption: "Axial, coronal and sagittal views with color-coded tumor regions",
         },
         {
           src: "/images/projects/neuroai/02-patient-registration.webp",
+          width: 1600,
+          height: 738,
           alt: "Patient registration and MRI upload form",
           caption: "Patient details flow automatically into reports and records",
         },
         {
           src: "/images/projects/neuroai/03-mri-upload.webp",
+          width: 1600,
+          height: 745,
           alt: "MRI upload portal",
           caption: "MRI upload step of the pipeline",
         },
         {
           src: "/images/projects/neuroai/04-habitat-map.webp",
+          width: 1600,
+          height: 754,
           alt: "Tumor habitat map overlay on an MRI slice",
           caption: "K-means tumor habitat clustering shown on the MRI",
         },
         {
           src: "/images/projects/neuroai/05-habitat-stats.webp",
+          width: 1600,
+          height: 736,
           alt: "Tumor habitat statistics",
           caption: "Statistics for each tumor habitat zone",
         },
         {
           src: "/images/projects/neuroai/06-grade-prediction.webp",
+          width: 1600,
+          height: 738,
           alt: "High-grade vs low-grade tumor prediction",
           caption: "XGBoost grade prediction with SHAP explanation",
         },
         {
           src: "/images/projects/neuroai/07-compare-visits.webp",
+          width: 1600,
+          height: 726,
           alt: "Comparison of scans across patient visits",
           caption: "Longitudinal tumor tracking across visits",
         },
@@ -230,21 +248,29 @@ export const content = {
       images: [
         {
           src: "/images/projects/acadtrack/01-coordinator-dashboard.webp",
+          width: 1600,
+          height: 671,
           alt: "Coordinator dashboard for uploading mark sheets",
           caption: "Coordinators upload and approve semester mark sheets before GPA calculation",
         },
         {
           src: "/images/projects/acadtrack/02-student-grades.webp",
+          width: 1600,
+          height: 713,
           alt: "Student grades view with CGPA",
           caption: "Students see CGPA, semester breakdown and letter grades",
         },
         {
           src: "/images/projects/acadtrack/03-transcripts.webp",
+          width: 1600,
+          height: 664,
           alt: "Transcript management panel",
           caption: "Controller of Examinations generates and verifies official transcripts",
         },
         {
           src: "/images/projects/acadtrack/04-login.webp",
+          width: 1600,
+          height: 669,
           alt: "Role-based login screen",
           caption: "Each role sees a different dashboard and permissions",
         },

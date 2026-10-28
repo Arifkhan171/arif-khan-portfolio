@@ -55,6 +55,9 @@ export type ProjectImage = {
   readonly src: string;
   readonly alt: string;
   readonly caption: string;
+  /** Real pixel size of the file; the validator checks it. */
+  readonly width: number;
+  readonly height: number;
 };
 
 export type ProjectVideo = {
