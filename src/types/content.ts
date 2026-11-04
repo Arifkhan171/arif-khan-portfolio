@@ -38,6 +38,8 @@ export type Profile = {
   readonly summary: string;
   readonly location: string;
   readonly availability: string;
+  /** 1-2 sentences for the contact section. */
+  readonly contactMessage: string;
   /** Year the person started building AI/ML projects. */
   readonly buildingSince: number;
   readonly email: string;

@@ -81,6 +81,11 @@ function checkProject(project: Project, index: number): void {
   } else if (project.tier === "other") {
     need(Boolean(project.problem), "a problem");
     need(Boolean(project.role), "a role");
+    need(project.metrics.length > 0, "at least one metric");
+    need(project.summary.trim() !== "", "a summary");
+  } else {
+    need(project.repo.visibility === "public", "a public repo");
+    need(project.summary.trim() !== "", "a summary");
   }
 
   if (project.period) checkPeriod(`${where}.period`, project.period);
@@ -121,6 +126,12 @@ function checkProject(project: Project, index: number): void {
 
   if (project.repo.visibility === "public" && !project.repo.url.startsWith("https://github.com/")) {
     fail(`${where}.repo`, `url "${project.repo.url}" must start with https://github.com/`);
+  }
+  if (project.repo.visibility === "private" && project.repo.note.trim() === "") {
+    fail(`${where}.repo`, "a private repo needs a note");
+  }
+  if (project.demoUrl !== undefined && !project.demoUrl.startsWith("https://")) {
+    fail(where, `demoUrl "${project.demoUrl}" must start with https://`);
   }
 }
 
@@ -222,6 +233,12 @@ if (!cv.href.startsWith("/cv/") || !cv.href.endsWith(".pdf")) {
 }
 if (!cv.fileName.endsWith(".pdf") || /[\\/]/.test(cv.fileName)) {
   fail("profile.links.cv", `fileName "${cv.fileName}" must end with .pdf and contain no slash`);
+}
+
+// Contact section (Spec 09).
+const message: string = content.profile.contactMessage.trim();
+if (message === "" || message.length > 200) {
+  fail("profile.contactMessage", `must be 1-200 characters (found ${message.length})`);
 }
 
 // Hero section (Spec 05): the layout is built for exactly 4 stats; the rest is derived from content.

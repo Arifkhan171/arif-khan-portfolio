@@ -1,8 +1,16 @@
-import type { Project } from "../types/content.ts";
+import type { Project, ProjectTier } from "../types/content.ts";
+
+/** Projects of one tier, in display order. */
+export function getProjectsByTier(
+  projects: readonly Project[],
+  tier: ProjectTier,
+): readonly Project[] {
+  return projects.filter((p) => p.tier === tier).toSorted((a, b) => a.order - b.order);
+}
 
 /** Featured projects, in display order. */
 export function getFeaturedProjects(projects: readonly Project[]): readonly Project[] {
-  return projects.filter((p) => p.tier === "featured").toSorted((a, b) => a.order - b.order);
+  return getProjectsByTier(projects, "featured");
 }
 
 /** Anchor id of a project's card, e.g. "project-neuroai". */

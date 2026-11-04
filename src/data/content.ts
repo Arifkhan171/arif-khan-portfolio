@@ -25,6 +25,8 @@ export const content = {
       "AI Engineer at the University of Loralai, where I build and run a production multi-agent chatbot used across 10 university departments. Building AI systems since 2023, with a BS in Computer Science (CGPA 3.73).",
     location: "Loralai, Balochistan, Pakistan",
     availability: "Open to remote AI roles",
+    contactMessage:
+      "I'm looking for AI engineering roles where I can build LLM agents, RAG systems and production ML. Email is the fastest way to reach me.",
     buildingSince: 2023,
     email: "arifeng171@gmail.com",
     links: {
