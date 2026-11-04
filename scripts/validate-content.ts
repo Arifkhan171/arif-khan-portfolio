@@ -4,7 +4,15 @@ import { existsSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { content } from "../src/data/content.ts";
-import type { NavItem, Period, Project, YearMonth } from "../src/types/content.ts";
+import type {
+  Experience,
+  NavItem,
+  Period,
+  Project,
+  SkillGroup,
+  TimelineItem,
+  YearMonth,
+} from "../src/types/content.ts";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const errors: string[] = [];
@@ -141,6 +149,55 @@ content.education.forEach((item, i) => {
   checkPeriod(`education[${i}].period`, item.period);
 });
 
+const blank = (s: string): boolean => s.trim() === "";
+
+// Experience, education, timeline and skills (Spec 08).
+const experienceItems: readonly Experience[] = content.experience;
+experienceItems.forEach((item, i) => {
+  const where = `experience[${i}]`;
+  for (const key of ["role", "organization", "location", "employmentType"] as const) {
+    if (blank(item[key])) fail(where, `${key} is empty`);
+  }
+  if (item.highlights.length === 0) fail(where, "needs at least 1 highlight");
+  if (item.highlights.some(blank)) fail(where, "has an empty highlight");
+  if (item.tech.some(blank)) fail(where, "has an empty tech name");
+});
+content.education.forEach((item, i) => {
+  for (const key of ["degree", "institution", "grade"] as const) {
+    if (blank(item[key])) fail(`education[${i}]`, `${key} is empty`);
+  }
+});
+
+const timeline: readonly TimelineItem[] = content.timeline;
+if (timeline.length === 0) fail("timeline", "must not be empty");
+timeline.forEach((item, i) => {
+  const where = `timeline[${i}]`;
+  if (!Number.isInteger(item.year) || item.year < 2000 || item.year > 2100) {
+    fail(where, `year ${item.year} must be an integer from 2000 to 2100`);
+  }
+  const prev = timeline[i - 1];
+  if (prev && item.year <= prev.year) {
+    fail(where, `year ${item.year} must be after ${prev.year} (sorted, no duplicates)`);
+  }
+  if (blank(item.title) || blank(item.description)) {
+    fail(where, "title and description must not be empty");
+  }
+});
+
+const skills: readonly SkillGroup[] = content.skills;
+const groupNames = new Set<string>();
+if (skills.length === 0) fail("skills", "must not be empty");
+skills.forEach((group, i) => {
+  const where = `skills[${group.name || i}]`;
+  if (blank(group.name)) fail(where, "name is empty");
+  if (groupNames.has(group.name)) fail(where, "duplicate group name");
+  groupNames.add(group.name);
+  if (group.items.length === 0) fail(where, "needs at least 1 item");
+  if (group.items.some(blank)) fail(where, "has an empty item");
+  const dupes = group.items.filter((name, j) => group.items.indexOf(name) !== j);
+  if (dupes.length > 0) fail(where, `duplicate item(s): ${dupes.join(", ")}`);
+});
+
 const RESERVED_IDS = new Set(["main", "top", "hero"]);
 const navigation: readonly NavItem[] = content.navigation;
 const navIds = new Set<string>();
@@ -193,6 +250,6 @@ if (errors.length > 0) {
 } else {
   const imageCount = projects.reduce((sum, project) => sum + project.images.length, 0);
   console.log(
-    `✓ Content is valid (${projects.length} projects, ${imageCount} images, ${navigation.length} nav items, CV found)`,
+    `✓ Content is valid (${projects.length} projects, ${imageCount} images, ${navigation.length} nav items, ${timeline.length} timeline years, ${skills.length} skill groups, CV found)`,
   );
 }

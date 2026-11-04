@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useLayoutEffect } from "react";
+import { lazy, Suspense, useEffect, useLayoutEffect, type ComponentType } from "react";
 import { content } from "@/data/content";
 import { getNavType, parseRoute, savedScrollY, usePathname } from "@/lib/router";
 import { loadCaseStudy } from "@/pages/loadCaseStudy";
@@ -6,24 +6,33 @@ import { Section } from "@/components/ui/Section";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { Hero } from "@/components/sections/Hero";
 import { FeaturedProjects } from "@/components/sections/FeaturedProjects";
+import { Experience } from "@/components/sections/Experience";
+import { Skills } from "@/components/sections/Skills";
 
 const CaseStudyPage = lazy(loadCaseStudy);
 
-// Placeholder sections: Specs 08-09 replace them.
+const sections: Partial<Record<string, ComponentType>> = {
+  projects: FeaturedProjects,
+  experience: Experience,
+  skills: Skills,
+};
+
+// Placeholder sections: Spec 09 replaces the last one.
 function HomePage() {
   const { navigation } = content;
   return (
     <>
       <Hero />
-      {navigation.map((item) =>
-        item.id === "projects" ? (
-          <FeaturedProjects key={item.id} />
+      {navigation.map((item) => {
+        const Component = sections[item.id];
+        return Component ? (
+          <Component key={item.id} />
         ) : (
           <Section key={item.id} id={item.id} title={item.label} className="min-h-[60vh]">
             <p className="text-muted">This section is coming soon.</p>
           </Section>
-        ),
-      )}
+        );
+      })}
     </>
   );
 }

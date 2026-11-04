@@ -28,3 +28,8 @@ export function formatYearMonth(value: YearMonth | "present"): string {
 export function formatPeriod(period: Period): string {
   return `${formatYearMonth(period.start)} – ${formatYearMonth(period.end)}`;
 }
+
+/** "0.75 → 0.85" never splits: the spaces around the arrow become non-breaking. Content stays unchanged. */
+export function keepArrowsTogether(text: string): string {
+  return text.replaceAll(" → ", "\u00A0→\u00A0");
+}
