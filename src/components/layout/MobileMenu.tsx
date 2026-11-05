@@ -44,7 +44,7 @@ function Panel({ panelRef, active, onNavigate }: Omit<MobileMenuProps, "open">) 
     <m.div
       ref={panelRef}
       inert={!isPresent}
-      className="absolute inset-x-0 top-full max-h-[calc(100dvh-var(--spacing-header))] overflow-y-auto overscroll-contain border-b border-border bg-background shadow-raised"
+      className="absolute inset-x-0 top-full max-h-[calc(100dvh-var(--spacing-header))] overflow-y-auto overscroll-contain border-b border-border bg-background shadow-overlay"
       variants={dropDown}
       initial="hidden"
       animate="visible"
@@ -60,8 +60,9 @@ function Panel({ panelRef, active, onNavigate }: Omit<MobileMenuProps, "open">) 
                 onClick={onNavigate}
                 aria-current={active === item.id ? "true" : undefined}
                 className={cn(
-                  "flex h-12 items-center rounded-md px-3 text-body text-foreground transition-colors hover:bg-surface-muted",
-                  active === item.id && "text-accent",
+                  "relative flex h-12 items-center rounded-md px-3 text-body text-foreground transition-colors hover:bg-surface-muted",
+                  active === item.id &&
+                    "before:absolute before:inset-y-3 before:left-0 before:w-0.5 before:rounded-full before:bg-accent",
                 )}
               >
                 {item.label}
@@ -69,7 +70,7 @@ function Panel({ panelRef, active, onNavigate }: Omit<MobileMenuProps, "open">) 
             </li>
           ))}
         </ul>
-        <Button href={cv.href} download={cv.fileName} className="mt-3 w-full">
+        <Button variant="secondary" href={cv.href} download={cv.fileName} className="mt-3 w-full">
           <DownloadIcon size={16} />
           Download CV
         </Button>

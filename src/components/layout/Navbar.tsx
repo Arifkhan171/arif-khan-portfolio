@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { content } from "@/data/content";
 import { useActiveSection } from "@/hooks/useActiveSection";
+import { initials } from "@/lib/format";
 import { usePathname } from "@/lib/router";
 import { cn } from "@/lib/cn";
 import { Button } from "@/components/ui/Button";
@@ -75,8 +76,14 @@ export function Navbar({ scrolled }: { scrolled: boolean }) {
             <a
               href="/#top"
               onClick={closeNow}
-              className="inline-flex h-11 items-center rounded-md text-small font-semibold"
+              className="inline-flex h-11 items-center gap-3 rounded-md text-small font-semibold"
             >
+              <span
+                aria-hidden="true"
+                className="inline-flex size-8 items-center justify-center rounded-md border border-border bg-surface text-[15px] tracking-tight"
+              >
+                {initials(profile.name)}
+              </span>
               {profile.name}
             </a>
 
@@ -92,7 +99,7 @@ export function Navbar({ scrolled }: { scrolled: boolean }) {
                         className={cn(
                           "inline-flex h-9 items-center rounded-md px-3 text-small text-muted transition-colors hover:bg-surface-muted hover:text-foreground",
                           isActive &&
-                            "text-accent underline decoration-2 underline-offset-8 hover:text-accent",
+                            "text-foreground underline decoration-accent decoration-2 underline-offset-8",
                         )}
                       >
                         {item.label}
@@ -104,7 +111,12 @@ export function Navbar({ scrolled }: { scrolled: boolean }) {
 
               <ThemeToggle />
 
-              <Button size="sm" href={cv.href} download={cv.fileName} className="max-md:hidden">
+              <Button
+                variant="secondary"
+                href={cv.href}
+                download={cv.fileName}
+                className="max-md:hidden"
+              >
                 <DownloadIcon size={16} />
                 Download CV
               </Button>
@@ -116,7 +128,7 @@ export function Navbar({ scrolled }: { scrolled: boolean }) {
                 aria-controls="mobile-menu"
                 aria-label={open ? "Close menu" : "Open menu"}
                 onClick={() => setOpen((value) => !value)}
-                className="inline-flex size-11 items-center justify-center rounded-full border border-border bg-surface text-foreground transition-colors hover:bg-surface-muted md:hidden"
+                className="inline-flex size-11 items-center justify-center rounded-md border border-border bg-surface text-foreground transition-colors hover:bg-surface-muted md:hidden"
               >
                 {open ? <CloseIcon /> : <MenuIcon />}
               </button>

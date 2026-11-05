@@ -3,7 +3,7 @@ import { cn } from "@/lib/cn";
 import { GitHubIcon, LinkedInIcon, MailIcon } from "@/components/ui/icons";
 
 const iconLink =
-  "inline-flex size-11 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface-muted hover:text-foreground";
+  "inline-flex size-11 items-center justify-center rounded-md text-muted transition-colors hover:bg-surface-muted hover:text-foreground";
 
 /** GitHub, LinkedIn and email icon links. Used in the hero and the footer. */
 export function SocialLinks({ className }: { className?: string }) {

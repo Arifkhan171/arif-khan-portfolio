@@ -41,7 +41,7 @@ export function NotFound({ variant }: { variant: keyof typeof text }) {
       <p className="mt-4 max-w-prose text-lead text-muted">{t.body}</p>
       <a
         href={t.href}
-        className="mt-6 inline-flex h-11 items-center gap-1.5 text-small font-medium text-accent underline-offset-4 hover:underline"
+        className="mt-6 inline-flex h-11 items-center gap-1.5 text-small font-medium text-accent underline-offset-3 hover:underline"
       >
         <ArrowRightIcon size={16} className="rotate-180" />
         {t.link}

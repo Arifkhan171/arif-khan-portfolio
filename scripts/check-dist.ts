@@ -62,7 +62,7 @@ const expected: [string, string][] = [
   ["twitter:description", hm.description],
   ["twitter:image", image],
   ["author", content.profile.name],
-  ["theme-color", "#f9fafb"],
+  ["theme-color", "#fafaf7"],
 ];
 for (const [key, value] of expected) {
   check(metaContent(home, key) === escapeHtml(value), `home meta "${key}" is wrong or missing`);

@@ -47,7 +47,7 @@ export function ProjectCard({ project, variant }: ProjectCardProps) {
             href={projectPath(project.id)}
             tabIndex={-1}
             aria-hidden="true"
-            className="block rounded-md lg:col-start-1 lg:row-start-1"
+            className="block rounded-image lg:col-start-1 lg:row-start-1"
           >
             <img
               src={cover.src}
@@ -56,7 +56,7 @@ export function ProjectCard({ project, variant }: ProjectCardProps) {
               height={cover.height}
               loading="lazy"
               decoding="async"
-              className="aspect-[2/1] w-full rounded-md border border-border bg-surface-muted object-cover object-top transition-[border-color,box-shadow] hover:border-accent/50 hover:shadow-raised"
+              className="aspect-[2/1] w-full rounded-image border border-border bg-surface-muted object-cover object-top transition-[border-color] hover:border-border-hover"
             />
           </a>
         )}

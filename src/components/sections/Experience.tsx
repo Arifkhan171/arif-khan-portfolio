@@ -22,7 +22,7 @@ export function Experience() {
             tagsLabel="Tech used"
             tags={job.tech}
           >
-            <ul className="mt-5 max-w-prose list-disc space-y-2.5 pl-5 text-small marker:text-accent">
+            <ul className="mt-5 max-w-prose list-disc space-y-2.5 pl-5 text-small marker:text-muted">
               {job.highlights.map((text) => (
                 <li key={text}>{keepArrowsTogether(text)}</li>
               ))}

@@ -1,7 +1,7 @@
 import { useReducedMotion, type HTMLMotionProps, type Variants } from "motion/react";
 
 /** Durations in seconds. Nothing in the site is longer than `slow`. */
-export const duration = { fast: 0.15, base: 0.3, slow: 0.5 } as const;
+export const duration = { fast: 0.15, base: 0.3, reveal: 0.4, slow: 0.5 } as const;
 /** The one ease-out curve. Same as `--ease-out` in src/styles/index.css. */
 export const easeOut = [0.22, 1, 0.36, 1] as const;
 
@@ -12,10 +12,10 @@ export const fadeIn: Pick<HTMLMotionProps<"div">, "initial" | "animate" | "trans
   transition: { duration: duration.slow, ease: easeOut },
 };
 
-/** Fade in while moving up 12 px. Use as `variants` (states: hidden, visible). */
+/** Fade in while moving up 8 px (reveals take 400 ms). Use as `variants` (states: hidden, visible). */
 export const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 12 },
-  visible: { opacity: 1, y: 0, transition: { duration: duration.slow, ease: easeOut } },
+  hidden: { opacity: 0, y: 8 },
+  visible: { opacity: 1, y: 0, transition: { duration: duration.reveal, ease: easeOut } },
 };
 
 /** Panel that drops down a little (mobile menu). States: hidden (also the exit), visible. */
@@ -32,8 +32,8 @@ export const stagger: Variants = {
 
 /** Child of `stagger`. */
 export const staggerItem: Variants = {
-  hidden: { opacity: 0, y: 12 },
-  visible: { opacity: 1, y: 0, transition: { duration: duration.base, ease: easeOut } },
+  hidden: { opacity: 0, y: 8 },
+  visible: { opacity: 1, y: 0, transition: { duration: duration.reveal, ease: easeOut } },
 };
 
 /** Animate once when scrolled into view. Use with `fadeUp` or `stagger` variants. */
@@ -46,13 +46,6 @@ export const revealOnScroll: Pick<
   viewport: { once: true, amount: 0.2 },
 };
 
-/** Lift 3 px on hover. */
-export const hoverLift: Pick<HTMLMotionProps<"div">, "whileHover" | "whileTap" | "transition"> = {
-  whileHover: { y: -3 },
-  whileTap: { y: 0 },
-  transition: { duration: duration.fast, ease: easeOut },
-};
-
 // Opacity-only versions. Motion's `reducedMotion="user"` only delays transforms (they snap at the end),
 // so with reduced motion we must not animate position at all.
 const fadeOnly: Variants = {
@@ -63,10 +56,9 @@ const dropDownFade: Variants = {
   hidden: { opacity: 0, transition: { duration: duration.fast, ease: easeOut } },
   visible: { opacity: 1, transition: { duration: duration.fast, ease: easeOut } },
 };
-const noLift: Pick<HTMLMotionProps<"div">, "whileHover" | "whileTap" | "transition"> = {};
 
 /**
- * Presets for components. Use these instead of importing `fadeUp`, `staggerItem`, `hoverLift` and `dropDown`
+ * Presets for components. Use these instead of importing `fadeUp`, `staggerItem` and `dropDown`
  * directly: with "reduce motion" on, nothing moves (opacity fades only).
  */
 export function useMotionPresets() {
@@ -75,7 +67,6 @@ export function useMotionPresets() {
     reduced: Boolean(reduced),
     fadeUp: reduced ? fadeOnly : fadeUp,
     staggerItem: reduced ? fadeOnly : staggerItem,
-    hoverLift: reduced ? noLift : hoverLift,
     dropDown: reduced ? dropDownFade : dropDown,
   };
 }

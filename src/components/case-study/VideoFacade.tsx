@@ -14,7 +14,7 @@ export function VideoFacade({ video, poster }: { video: ProjectVideo; poster?: P
 
   return (
     <div>
-      <div className="relative aspect-video overflow-hidden rounded-lg border border-border bg-surface-muted">
+      <div className="relative aspect-video overflow-hidden rounded-image border border-border bg-surface-muted">
         {playing ? (
           <iframe
             ref={frameRef}
@@ -48,7 +48,7 @@ export function VideoFacade({ video, poster }: { video: ProjectVideo; poster?: P
             />
             <span
               aria-hidden="true"
-              className="relative flex size-16 items-center justify-center rounded-full bg-accent text-accent-foreground shadow-raised transition-transform sm:size-20 motion-safe:group-hover:scale-105"
+              className="relative flex size-16 items-center justify-center rounded-full bg-accent text-accent-foreground shadow-overlay transition-transform sm:size-20 motion-safe:group-hover:scale-105"
             >
               <PlayIcon size={28} fill="currentColor" className="ml-1" />
             </span>

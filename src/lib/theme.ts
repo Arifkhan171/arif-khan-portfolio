@@ -3,7 +3,7 @@
 export type Theme = "light" | "dark";
 
 export const THEME_STORAGE_KEY = "portfolio-theme"; // keep in sync with index.html
-const THEME_COLOR: Record<Theme, string> = { light: "#f9fafb", dark: "#0b0c10" }; // = `background` token
+const THEME_COLOR: Record<Theme, string> = { light: "#fafaf7", dark: "#0e1012" }; // = `background` token
 const TRANSITION_MS = 200;
 
 const listeners = new Set<() => void>();

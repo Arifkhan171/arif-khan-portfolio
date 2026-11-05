@@ -4,12 +4,14 @@ import { content } from "@/data/content";
 import { useWindowLoaded } from "@/hooks/useWindowLoaded";
 import type { Project } from "@/types/content";
 import { duration, easeOut, fadeIn, revealOnScroll, useMotionPresets } from "@/lib/animations";
+import { cn } from "@/lib/cn";
 import { formatPeriod } from "@/lib/format";
 import { projectMeta } from "@/lib/meta";
 import { setPageMeta } from "@/lib/pageMeta";
 import { projectPath } from "@/lib/projects";
 import { getNavType } from "@/lib/router";
 import { Badge } from "@/components/ui/Badge";
+import { cardBase, cardLink } from "@/components/ui/Card";
 import { Container } from "@/components/ui/Container";
 import { InlineSep } from "@/components/ui/InlineSep";
 import { ArrowRightIcon, GitHubIcon, LockIcon } from "@/components/ui/icons";
@@ -50,7 +52,7 @@ export function CaseStudy({ project, next }: CaseStudyProps) {
         <BackLink projectId={project.id}>Back to projects</BackLink>
 
         <header className="mt-4 max-w-3xl">
-          <p className="font-mono text-caption tracking-[0.08em] text-accent uppercase">
+          <p className="font-mono text-caption tracking-[0.08em] text-muted uppercase">
             Case study
           </p>
           <h1
@@ -138,7 +140,7 @@ export function CaseStudy({ project, next }: CaseStudyProps) {
               reveal(
                 <>
                   <h2 className={sectionTitle}>What I built</h2>
-                  <ul className="mt-4 max-w-[56ch] list-disc space-y-2 pl-5 marker:text-accent">
+                  <ul className="mt-4 max-w-[56ch] list-disc space-y-2 pl-5 marker:text-muted">
                     {project.highlights.map((highlight) => (
                       <li key={highlight}>{highlight}</li>
                     ))}
@@ -151,7 +153,7 @@ export function CaseStudy({ project, next }: CaseStudyProps) {
             <m.section
               {...revealOnScroll}
               aria-labelledby="how-title"
-              className="self-start rounded-lg border border-border bg-surface p-6 shadow-soft"
+              className={cn(cardBase, "self-start")}
             >
               <h2 id="how-title" className={sectionTitle}>
                 How it works
@@ -176,7 +178,7 @@ export function CaseStudy({ project, next }: CaseStudyProps) {
                     height={image.height}
                     loading="lazy"
                     decoding="async"
-                    className="h-auto w-full rounded-lg border border-border bg-surface-muted"
+                    className="h-auto w-full rounded-image border border-border bg-surface-muted"
                   />
                   <figcaption className="mt-3 text-small text-muted">{image.caption}</figcaption>
                 </m.figure>
@@ -189,10 +191,10 @@ export function CaseStudy({ project, next }: CaseStudyProps) {
           {next && (
             <a
               href={projectPath(next.id)}
-              className="group flex items-center justify-between gap-4 rounded-lg border border-border bg-surface p-6 shadow-soft transition-shadow hover:shadow-raised"
+              className={cn(cardBase, cardLink, "group flex items-center justify-between gap-4")}
             >
               <span>
-                <span className="block font-mono text-caption tracking-[0.08em] text-accent uppercase">
+                <span className="block font-mono text-caption tracking-[0.08em] text-muted uppercase">
                   Next project
                 </span>
                 <span className="mt-2 block text-h3">{next.title}</span>

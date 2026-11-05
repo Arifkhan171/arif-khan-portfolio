@@ -1,8 +1,8 @@
 import { m } from "motion/react";
 import { content } from "@/data/content";
 import { revealOnScroll, stagger, useMotionPresets } from "@/lib/animations";
-import { cn } from "@/lib/cn";
 import { Badge } from "@/components/ui/Badge";
+import { cardBase } from "@/components/ui/Card";
 import { Section } from "@/components/ui/Section";
 
 export function Skills() {
@@ -17,22 +17,18 @@ export function Skills() {
         {...revealOnScroll}
         className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
       >
-        {skills.map((group, i) => (
+        {skills.map((group) => (
           <m.li
             key={group.name}
             variants={staggerItem}
-            // Same base classes as `Card` (keep in sync with `base` in Card.tsx; Card is not used
-            // because it can only animate together with the hover lift). The first group is emphasized.
-            className={cn(
-              "rounded-lg border bg-surface p-6 shadow-soft",
-              i === 0 ? "border-accent/40" : "border-border",
-            )}
+            // `Card` is a plain element and cannot be an `m.li`, so it shares the classes instead.
+            className={cardBase}
           >
             <h3 className="text-body font-semibold">{group.name}</h3>
             <ul aria-label={group.name} className="mt-3 flex flex-wrap gap-1.5">
               {group.items.map((name) => (
                 <li key={name} className="max-w-full">
-                  <Badge tone={i === 0 ? "accent" : "default"}>{name}</Badge>
+                  <Badge>{name}</Badge>
                 </li>
               ))}
             </ul>

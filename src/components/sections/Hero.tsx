@@ -10,7 +10,6 @@ import { InlineSep } from "@/components/ui/InlineSep";
 import { ArrowRightIcon, DownloadIcon, MapPinIcon } from "@/components/ui/icons";
 import { SocialLinks } from "@/components/layout/SocialLinks";
 import { PipelineSteps } from "@/components/sections/PipelineSteps";
-import { HeroBackdrop } from "@/components/sections/HeroBackdrop";
 
 // Containers only change timing (no position), so they are safe with reduced motion.
 const heroStagger: Variants = { hidden: {}, visible: { transition: { staggerChildren: 0.05 } } };
@@ -29,7 +28,6 @@ export function Hero() {
       aria-labelledby="hero-title"
       className="relative isolate -mt-header overflow-hidden pt-[calc(var(--spacing-header)+2.5rem)] pb-16 lg:pt-[calc(var(--spacing-header)+3rem)] lg:pb-24"
     >
-      <HeroBackdrop />
       <Container>
         <m.div
           variants={heroStagger}
@@ -39,7 +37,7 @@ export function Hero() {
         >
           <div className="lg:col-start-1 lg:row-start-1">
             <m.div variants={staggerItem} className="flex flex-wrap items-center gap-x-3 gap-y-2">
-              <Badge className="gap-2 border border-border bg-surface py-1 pr-3 pl-2.5">
+              <Badge className="gap-2 border border-border bg-surface pr-3 pl-2.5">
                 <span
                   aria-hidden="true"
                   className="flex size-3 items-center justify-center rounded-full bg-accent-soft"
@@ -58,7 +56,10 @@ export function Hero() {
             <h1 id="hero-title" className="mt-6 text-display">
               {profile.name}
             </h1>
-            <m.p variants={staggerItem} className="mt-3 text-h3 font-medium text-accent">
+            <m.p
+              variants={staggerItem}
+              className="mt-3 text-[1.125rem] leading-[1.4] font-medium text-foreground md:text-xl"
+            >
               {profile.title}
             </m.p>
             <m.p variants={staggerItem} className="mt-5 max-w-prose text-lead text-foreground">
@@ -112,7 +113,7 @@ export function Hero() {
                 variants={staggerItem}
                 className="lg:border-l lg:border-border lg:px-6 lg:first:border-l-0 lg:first:pl-0"
               >
-                <span className="block font-mono text-h2 font-medium tabular-nums">
+                <span className="block font-mono text-h2 font-medium tracking-[-0.02em] tabular-nums">
                   {stat.value}
                 </span>
                 <span className="mt-1 block max-w-[22ch] text-small text-muted">{stat.label}</span>
@@ -125,11 +126,11 @@ export function Hero() {
             <m.article
               variants={staggerItem}
               aria-labelledby="hero-pipeline-title"
-              className="relative mt-12 w-full max-w-xl overflow-hidden rounded-lg border border-border bg-surface p-6 shadow-soft before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-accent before:to-transparent before:opacity-60 lg:col-start-2 lg:row-start-1 lg:mt-0 lg:max-w-none"
+              className="mt-12 w-full max-w-xl rounded-lg border border-border bg-surface p-5 shadow-trace md:p-8 lg:col-start-2 lg:row-start-1 lg:mt-0 lg:max-w-none"
             >
               <p
                 aria-hidden="true"
-                className="font-mono text-caption tracking-[0.08em] text-accent uppercase"
+                className="font-mono text-caption tracking-[0.08em] text-muted uppercase"
               >
                 How it works
               </p>
@@ -144,7 +145,7 @@ export function Hero() {
               <div className="mt-5 border-t border-border pt-1">
                 <a
                   href={projectPath(heroProject.id)}
-                  className="inline-flex h-11 items-center gap-1.5 text-small font-medium text-accent underline-offset-4 hover:underline"
+                  className="inline-flex h-11 items-center gap-1.5 text-small font-medium text-accent underline-offset-3 hover:underline"
                 >
                   See the project
                   <ArrowRightIcon size={16} />

@@ -28,7 +28,7 @@ export function ErrorScreen() {
         <Button onClick={() => location.reload()}>Reload</Button>
         <a
           href="/"
-          className="inline-flex h-11 items-center gap-1.5 text-small font-medium text-accent underline-offset-4 hover:underline"
+          className="inline-flex h-11 items-center gap-1.5 text-small font-medium text-accent underline-offset-3 hover:underline"
         >
           <ArrowRightIcon size={16} className="rotate-180" />
           Back to home

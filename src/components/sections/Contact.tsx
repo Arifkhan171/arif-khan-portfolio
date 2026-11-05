@@ -44,7 +44,7 @@ export function Contact() {
   return (
     <Section id="contact" eyebrow="Get in touch" title={label}>
       <m.div variants={fadeUp} {...revealOnScroll}>
-        <Card className="grid gap-8 md:p-10 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:gap-x-12">
+        <Card className="grid gap-8 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:gap-x-12">
           <div>
             <h3 className="text-h3">Let's work together</h3>
             <p className="mt-3 max-w-prose text-lead">{profile.contactMessage}</p>

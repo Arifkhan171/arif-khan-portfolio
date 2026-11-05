@@ -29,6 +29,16 @@ export function formatPeriod(period: Period): string {
   return `${formatYearMonth(period.start)} – ${formatYearMonth(period.end)}`;
 }
 
+/** "Arif Khan" -> "AK": first letter of the first two words, upper case. */
+export function initials(name: string): string {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((word) => word.charAt(0).toUpperCase())
+    .join("");
+}
+
 /** "0.75 → 0.85" never splits: the spaces around the arrow become non-breaking. Content stays unchanged. */
 export function keepArrowsTogether(text: string): string {
   return text.replaceAll(" → ", "\u00A0→\u00A0");

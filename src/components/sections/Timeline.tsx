@@ -16,7 +16,7 @@ export function Timeline({ items, title }: TimelineProps) {
   return (
     <m.div variants={fadeUp} {...revealOnScroll} className="h-full">
       <Card className="h-full">
-        <h3 className="font-mono text-caption tracking-[0.08em] text-accent uppercase">{title}</h3>
+        <h3 className="font-mono text-caption tracking-[0.08em] text-muted uppercase">{title}</h3>
         <m.ol variants={stagger} className="mt-5">
           {items.map((item, i) => {
             const last = i === items.length - 1;
@@ -30,7 +30,7 @@ export function Timeline({ items, title }: TimelineProps) {
                 <span
                   className={cn(
                     "font-mono text-small font-medium tabular-nums",
-                    last ? "text-accent" : "text-muted",
+                    last ? "text-foreground" : "text-muted",
                   )}
                 >
                   {item.year}
@@ -39,7 +39,7 @@ export function Timeline({ items, title }: TimelineProps) {
                   aria-hidden="true"
                   className={cn(
                     "mt-1.5 size-3 rounded-full border-2",
-                    last ? "border-accent bg-accent" : "border-border bg-surface",
+                    last ? "border-foreground bg-foreground" : "border-border bg-surface",
                   )}
                 />
                 <span>

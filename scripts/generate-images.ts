@@ -7,6 +7,7 @@ import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { content } from "../src/data/content.ts";
+import { initials } from "../src/lib/format.ts";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const work = mkdtempSync(join(tmpdir(), "portfolio-images-"));
@@ -71,26 +72,26 @@ const ogHtml = `<!doctype html><html class="dark"><head><meta charset="utf-8"><s
 *{margin:0;box-sizing:border-box}
 html,body{width:1200px;height:630px;overflow:hidden}
 body{background:var(--background);color:var(--foreground);font-family:Inter;position:relative;padding:72px 80px}
-.grid{position:absolute;inset:0;background-image:linear-gradient(color-mix(in oklch,var(--border) 55%,transparent) 1px,transparent 1px),linear-gradient(90deg,color-mix(in oklch,var(--border) 55%,transparent) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(ellipse 80% 70% at 75% 20%,#000 20%,transparent 75%)}
-.glow{position:absolute;width:760px;height:760px;right:-200px;top:-320px;background:radial-gradient(circle,color-mix(in oklch,var(--accent) var(--glow-mix),transparent),transparent 65%)}
 .rel{position:relative}
 .top{display:flex;align-items:center;gap:16px}
-.mono{width:56px;height:56px;border-radius:12px;background:#171717;color:#fafafa;display:grid;place-items:center;font:700 24px Arial,sans-serif;border:1px solid var(--border)}
+.mono{width:56px;height:56px;border-radius:12px;background:var(--surface);color:var(--foreground);display:grid;place-items:center;font:600 24px Inter,sans-serif;letter-spacing:-.02em;border:1px solid var(--border)}
 .host{font:500 22px Mono;color:var(--muted);letter-spacing:.02em}
-h1{margin-top:64px;font-size:88px;font-weight:600;letter-spacing:-.035em;line-height:1.05}
-.title{margin-top:14px;font-size:40px;font-weight:500;color:var(--accent);letter-spacing:-.01em}
+h1{margin-top:64px;font-size:88px;font-weight:650;letter-spacing:-.04em;line-height:1}
+.title{margin-top:16px;font-size:40px;font-weight:500;color:var(--foreground);letter-spacing:-.01em}
 .stats{position:absolute;left:80px;right:80px;bottom:64px;display:grid;grid-template-columns:repeat(3,1fr);gap:32px;border-top:1px solid var(--border);padding-top:28px}
 .v{font:600 44px Mono;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
 .l{margin-top:6px;font-size:20px;color:var(--muted);line-height:1.35}
-</style></head><body><div class="grid"></div><div class="glow"></div>
-<div class="rel top"><div class="mono">AK</div><div class="host">${esc(profile.availability)}</div></div>
+</style></head><body>
+<div class="rel top"><div class="mono">${esc(initials(profile.name))}</div><div class="host">${esc(profile.availability)}</div></div>
 <h1 class="rel">${esc(profile.name)}</h1><p class="rel title">${esc(profile.title)}</p>
 <div class="stats">${stats.map((s) => `<div><div class="v">${esc(s.value)}</div><div class="l">${esc(s.label)}</div></div>`).join("")}</div>
 </body></html>`;
 shoot("og", ogHtml, 1200, 630, join(root, "public/og/og-default.png"));
 
-// ---- Icons, from public/favicon.svg ----
-const svg = readFileSync(join(root, "public/favicon.svg"), "utf8");
+// ---- Icons: public/favicon.svg is written from the initials of the profile name ----
+const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#0d7064"/><text x="32" y="43" font-family="Arial, sans-serif" font-size="28" font-weight="700" text-anchor="middle" fill="#ffffff">${esc(initials(profile.name))}</text></svg>
+`;
+writeFileSync(join(root, "public/favicon.svg"), svg);
 const iconPage = (markup: string, size: number): string =>
   `<!doctype html><html><head><style>*{margin:0}html,body{width:${size}px;height:${size}px;overflow:hidden}svg{display:block;width:${size}px;height:${size}px}</style></head><body>${markup}</body></html>`;
 shoot("favicon", iconPage(svg, 32), 32, 32, join(root, "public/favicon-32x32.png"));

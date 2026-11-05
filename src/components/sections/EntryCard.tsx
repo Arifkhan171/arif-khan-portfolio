@@ -49,7 +49,7 @@ export function EntryCard({
         <div>
           <p
             aria-hidden="true"
-            className="font-mono text-caption tracking-[0.08em] text-accent uppercase"
+            className="font-mono text-caption tracking-[0.08em] text-muted uppercase"
           >
             {kicker}
           </p>

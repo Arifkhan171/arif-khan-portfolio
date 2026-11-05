@@ -125,7 +125,7 @@ Tokens live in `src/styles/index.css`: `:root` = light values, `.dark` = dark va
 - Base components are in `src/components/ui/`: `Container`, `Section`, `Button`, `Badge`, `Card`, `ThemeToggle`. Icons are inline SVG in `icons.tsx` (`currentColor`, `size` prop, `aria-hidden`); there is no icon library.
 - Layout: `SiteLayout` (skip link, navbar, `<main id="main">`, footer). The navbar height is the token `h-header` / `--spacing-header`.
 - Theme: `useTheme()` from `src/hooks/useTheme.ts`. The storage key `portfolio-theme` and the `theme-color` values are repeated in the inline script in `index.html`; keep them in sync with `src/lib/theme.ts`.
-- Animation presets in `src/lib/animations.ts`: `fadeIn`, `fadeUp`, `stagger` + `staggerItem`, `revealOnScroll`, `hoverLift`, `dropDown`. **Get `fadeUp`, `staggerItem`, `hoverLift` and `dropDown` from `useMotionPresets()`, never import them directly**: with reduced motion they become opacity-only. Use **`m.*`, not `motion.*`** (the app runs inside `LazyMotion` with `strict`; ESLint also blocks the `motion` import).
+- Animation presets in `src/lib/animations.ts`: `fadeIn`, `fadeUp`, `stagger` + `staggerItem`, `revealOnScroll`, `dropDown`. **Get `fadeUp`, `staggerItem` and `dropDown` from `useMotionPresets()`, never import them directly**: with reduced motion they become opacity-only. Use **`m.*`, not `motion.*`** (the app runs inside `LazyMotion` with `strict`; ESLint also blocks the `motion` import).
 
 ## SEO and sharing
 
