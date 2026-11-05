@@ -217,3 +217,9 @@ html.theme-transition *::after {
     box-shadow 200ms !important;
   transition-timing-function: var(--ease-out) !important;
 }
+
+/* Animation code failed to load (see src/lib/chunkRecovery.ts): show everything without animation. */
+[data-motion="off"] [style*="opacity"] {
+  opacity: 1 !important;
+  transform: none !important;
+}

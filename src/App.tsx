@@ -1,7 +1,13 @@
 import { lazy, Suspense, useEffect, useLayoutEffect, type ComponentType } from "react";
 import { content } from "@/data/content";
+import { homeMeta } from "@/lib/meta";
+import { setPageMeta } from "@/lib/pageMeta";
+import { withReload } from "@/lib/chunkRecovery";
 import { getNavType, parseRoute, savedScrollY, usePathname } from "@/lib/router";
 import { loadCaseStudy } from "@/pages/loadCaseStudy";
+import { ErrorBoundary } from "@/components/layout/ErrorBoundary";
+import { ErrorScreen } from "@/components/layout/ErrorScreen";
+import { NotFound } from "@/components/layout/NotFound";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { Contact } from "@/components/sections/Contact";
 import { Hero } from "@/components/sections/Hero";
@@ -9,7 +15,7 @@ import { FeaturedProjects } from "@/components/sections/FeaturedProjects";
 import { Experience } from "@/components/sections/Experience";
 import { Skills } from "@/components/sections/Skills";
 
-const CaseStudyPage = lazy(loadCaseStudy);
+const CaseStudyPage = lazy(withReload(loadCaseStudy));
 
 const sections: Partial<Record<string, ComponentType>> = {
   projects: FeaturedProjects,
@@ -56,18 +62,23 @@ export default function App() {
   }, [pathname]);
 
   useEffect(() => {
-    if (route.page === "home") document.title = content.site.title;
+    if (route.page === "home") setPageMeta(homeMeta(content));
   }, [route.page]);
 
   return (
     <SiteLayout>
-      {route.page === "project" ? (
-        <Suspense fallback={<div className="min-h-screen" />}>
-          <CaseStudyPage id={route.id} />
-        </Suspense>
-      ) : (
-        <HomePage />
-      )}
+      {/* key: moving to another page resets a shown error */}
+      <ErrorBoundary key={pathname} fallback={<ErrorScreen />}>
+        {route.page === "project" ? (
+          <Suspense fallback={<div className="min-h-screen" />}>
+            <CaseStudyPage id={route.id} />
+          </Suspense>
+        ) : route.page === "notFound" ? (
+          <NotFound variant="page" />
+        ) : (
+          <HomePage />
+        )}
+      </ErrorBoundary>
     </SiteLayout>
   );
 }

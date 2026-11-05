@@ -1,9 +1,12 @@
 import { useEffect, useRef, type ReactNode } from "react";
 import { m } from "motion/react";
 import { content } from "@/data/content";
+import { useWindowLoaded } from "@/hooks/useWindowLoaded";
 import type { Project } from "@/types/content";
 import { duration, easeOut, fadeIn, revealOnScroll, useMotionPresets } from "@/lib/animations";
 import { formatPeriod } from "@/lib/format";
+import { projectMeta } from "@/lib/meta";
+import { setPageMeta } from "@/lib/pageMeta";
 import { projectPath } from "@/lib/projects";
 import { getNavType } from "@/lib/router";
 import { Badge } from "@/components/ui/Badge";
@@ -22,12 +25,14 @@ export function CaseStudy({ project, next }: CaseStudyProps) {
   const { fadeUp } = useMotionPresets();
   const headingRef = useRef<HTMLHeadingElement>(null);
   const steps = project.architecture ?? [];
+  // Screenshots start downloading after the window "load" event, so they do not slow the first screen.
+  const pageLoaded = useWindowLoaded();
 
   useEffect(() => {
-    document.title = `${project.title} — ${content.profile.name}`;
+    setPageMeta(projectMeta(content, project));
     // Opened by a click or Back/Forward: start at the new content. A direct load keeps the browser default.
     if (getNavType() !== "load") headingRef.current?.focus({ preventScroll: true });
-  }, [project.title]);
+  }, [project]);
 
   const reveal = (children: ReactNode, className?: string) => (
     <m.section variants={fadeUp} {...revealOnScroll} className={className}>
@@ -165,7 +170,7 @@ export function CaseStudy({ project, next }: CaseStudyProps) {
               {project.images.map((image) => (
                 <m.figure key={image.src} variants={fadeUp} {...revealOnScroll}>
                   <img
-                    src={image.src}
+                    src={pageLoaded ? image.src : undefined}
                     alt={image.alt}
                     width={image.width}
                     height={image.height}

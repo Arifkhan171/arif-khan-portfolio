@@ -18,7 +18,11 @@ npm run lint       # ESLint (zero warnings allowed)
 npm run format     # Prettier
 npm run typecheck  # TypeScript check, no output
 npm run validate:content  # check content.ts (runs first in build)
+npm run check      # ALL gates in one command: validate, typecheck, lint, prettier, build, dist checks
+npm run images     # regenerate the OG image and icons (needs Edge or Chrome)
 ```
+
+`npm run check` stops at the first error. Run it before every push.
 
 ## Tech stack (installed versions)
 
@@ -43,8 +47,8 @@ Notes:
 ## Folder structure
 
 ```
-scripts/           validate-content.ts (checks the content file)
-public/            static files (favicon, images/projects, cv)
+scripts/           validate-content.ts, check-dist.ts (checks dist/), vite-plugin-site.ts (SEO files), generate-images.ts
+public/            static files (favicons, og/, images/projects, cv)
 src/
   components/
     layout/        SkipLink, Navbar, MobileMenu, Footer, SiteLayout
@@ -123,6 +127,13 @@ Tokens live in `src/styles/index.css`: `:root` = light values, `.dark` = dark va
 - Theme: `useTheme()` from `src/hooks/useTheme.ts`. The storage key `portfolio-theme` and the `theme-color` values are repeated in the inline script in `index.html`; keep them in sync with `src/lib/theme.ts`.
 - Animation presets in `src/lib/animations.ts`: `fadeIn`, `fadeUp`, `stagger` + `staggerItem`, `revealOnScroll`, `hoverLift`, `dropDown`. **Get `fadeUp`, `staggerItem`, `hoverLift` and `dropDown` from `useMotionPresets()`, never import them directly**: with reduced motion they become opacity-only. Use **`m.*`, not `motion.*`** (the app runs inside `LazyMotion` with `strict`; ESLint also blocks the `motion` import).
 
-## Deployment
+## SEO and sharing
 
-Hosted on Vercel. Config is in `vercel.json` (single-page-app rewrite). The real deployment happens in Spec 10.
+The title, description, canonical, Open Graph and Twitter tags, JSON-LD, `robots.txt`, `sitemap.xml`, `404.html` and `projects/<id>.html` are **generated at build time** from `src/data/content.ts` by `scripts/vite-plugin-site.ts`. `index.html` holds only the marker `<!-- site-head -->`; do not write a title or description there (the validator fails).
+
+- The Open Graph image (`public/og/og-default.png`) and the icons are made by `npm run images` from `content.ts` and `favicon.svg`. Run it again if the text or the design changes, and commit the PNGs.
+- The theme script in `index.html` is allowed by hash in the CSP in `vercel.json`. If you edit it, `npm run check` prints the new hash.
+
+## Launch
+
+**Do not deploy until the design specs are finished.** The launch steps (set `site.url`, create the Vercel project, checks on the live site) are only in `.claude/LAUNCH.md`.

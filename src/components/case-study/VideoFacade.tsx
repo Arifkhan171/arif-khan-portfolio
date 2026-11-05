@@ -38,6 +38,7 @@ export function VideoFacade({ video, poster }: { video: ProjectVideo; poster?: P
                 width={poster.width}
                 height={poster.height}
                 decoding="async"
+                fetchPriority="high"
                 className="absolute inset-0 size-full object-cover object-top"
               />
             )}

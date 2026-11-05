@@ -260,6 +260,26 @@ if (heroProject === undefined) {
   if (heroProject.subtitle.trim() === "") fail(`projects[${heroProject.id}]`, "subtitle is empty");
 }
 
+// Site meta (Spec 10). The head tags are generated from content, so index.html must not hold a copy.
+try {
+  const url = new URL(content.site.url);
+  if (url.protocol !== "https:") fail("site.url", "must start with https://");
+  if (url.pathname !== "/" || url.search || url.hash || content.site.url.endsWith("/")) {
+    fail("site.url", "must be an origin without a path or trailing slash");
+  }
+} catch {
+  fail("site.url", `"${content.site.url}" is not a valid URL`);
+}
+if (blank(content.site.language)) fail("site.language", "is empty");
+if (blank(content.site.title) || blank(content.site.description)) {
+  fail("site", "title and description must not be empty");
+}
+const indexHtml = readFileSync(resolve(root, "index.html"), "utf8");
+if (!indexHtml.includes("<!-- site-head -->")) fail("index.html", "is missing <!-- site-head -->");
+if (/<title|name="description"/.test(indexHtml)) {
+  fail("index.html", "must not contain <title> or a description; they come from content.site");
+}
+
 if (errors.length > 0) {
   console.error(errors.join("\n"));
   console.error(`\n${errors.length} content error(s) found.`);

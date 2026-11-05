@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from "react";
 
-export type Route = { page: "home" } | { page: "project"; id: string };
+export type Route = { page: "home" } | { page: "project"; id: string } | { page: "notFound" };
 /** How the current page was reached: first load, a link click, or Back/Forward. */
 export type NavType = "load" | "push" | "pop";
 type EntryState = { scrollY?: number; from?: string } | null;
@@ -13,10 +13,14 @@ export const getNavType = (): NavType => navType;
 export const savedScrollY = () => (history.state as EntryState)?.scrollY;
 export const cameFrom = () => (history.state as EntryState)?.from;
 
-/** "/projects/neuroai" is a project; "/projects" and "/projects/" are a project with id "" (not found). */
+/**
+ * "/" is home. "/projects/neuroai" is a project; "/projects" and "/projects/" are a project with id ""
+ * (not found). Any other path is not found.
+ */
 export function parseRoute(path: string): Route {
+  if (path === "/" || path === "/index.html") return { page: "home" };
   const match = /^\/projects(?:\/([^/]*))?\/?$/.exec(path);
-  if (!match) return { page: "home" };
+  if (!match) return { page: "notFound" };
   let id = match[1] ?? "";
   try {
     id = decodeURIComponent(id);

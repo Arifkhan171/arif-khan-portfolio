@@ -1,7 +1,7 @@
 import { content } from "@/data/content";
 import { getFeaturedProjects } from "@/lib/projects";
 import { CaseStudy } from "@/components/case-study/CaseStudy";
-import { NotFound } from "@/components/case-study/NotFound";
+import { NotFound } from "@/components/layout/NotFound";
 
 const featured = getFeaturedProjects(content.projects);
 
@@ -9,7 +9,7 @@ const featured = getFeaturedProjects(content.projects);
 export default function CaseStudyPage({ id }: { id: string }) {
   const index = featured.findIndex((project) => project.id === id);
   const project = featured[index];
-  if (!project) return <NotFound />;
+  if (!project) return <NotFound variant="project" />;
   const next = featured.length > 1 ? featured[(index + 1) % featured.length] : undefined;
   return <CaseStudy key={project.id} project={project} next={next} />;
 }
