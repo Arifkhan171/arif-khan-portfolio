@@ -20,6 +20,7 @@ const fail = (where: string, message: string): void => {
   errors.push(`✗ ${where}: ${message}`);
 };
 
+const blank = (s: string): boolean => s.trim() === "";
 const SLUG = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const YOUTUBE_ID = /^[A-Za-z0-9_-]{11}$/;
 const YEAR_MONTH = /^\d{4}-(0[1-9]|1[0-2])$/;
@@ -51,6 +52,28 @@ function webpSize(file: Buffer): { width: number; height: number } | undefined {
     return { width: file.readUIntLE(24, 3) + 1, height: file.readUIntLE(27, 3) + 1 };
   }
   return undefined;
+}
+
+/** The file exists under public/, is a WebP, and its real pixel size matches `width`/`height`. */
+function checkWebp(at: string, src: string, width: number, height: number): void {
+  const file = resolve(root, "public", src.slice(1));
+  if (!existsSync(file)) {
+    fail(at, `file not found: public${src}`);
+  } else if (Number.isInteger(width) && Number.isInteger(height)) {
+    const real = webpSize(readFileSync(file));
+    if (real === undefined) {
+      fail(at, "not a valid WebP file");
+    } else if (real.width !== width || real.height !== height) {
+      fail(
+        at,
+        `width/height ${width}×${height} do not match the file (${real.width}×${real.height})`,
+      );
+    }
+  }
+  if (!Number.isInteger(width) || width <= 0)
+    fail(at, `width "${width}" must be a positive integer`);
+  if (!Number.isInteger(height) || height <= 0)
+    fail(at, `height "${height}" must be a positive integer`);
 }
 
 function checkProject(project: Project, index: number): void {
@@ -96,24 +119,14 @@ function checkProject(project: Project, index: number): void {
     const prefix = `/images/projects/${project.id}/`;
     if (!image.src.startsWith(prefix) || !image.src.endsWith(".webp")) {
       fail(at, `src "${image.src}" must start with ${prefix} and end with .webp`);
-    } else if (!existsSync(resolve(root, "public", image.src.slice(1)))) {
-      fail(at, `file not found: public${image.src}`);
-    } else if (Number.isInteger(image.width) && Number.isInteger(image.height)) {
-      const real = webpSize(readFileSync(resolve(root, "public", image.src.slice(1))));
-      if (real === undefined) {
-        fail(at, "not a valid WebP file");
-      } else if (real.width !== image.width || real.height !== image.height) {
-        fail(
-          at,
-          `width/height ${image.width}×${image.height} do not match the file (${real.width}×${real.height})`,
-        );
-      }
+    } else {
+      checkWebp(at, image.src, image.width, image.height);
     }
-    if (!Number.isInteger(image.width) || image.width <= 0) {
-      fail(at, `width "${image.width}" must be a positive integer`);
-    }
-    if (!Number.isInteger(image.height) || image.height <= 0) {
-      fail(at, `height "${image.height}" must be a positive integer`);
+  });
+  project.metrics.forEach((metric, i) => {
+    const method = metric.method;
+    if (method !== undefined && (blank(method) || method.length > 40)) {
+      fail(`${where}.metrics[${i}].method`, "must be 1-40 characters");
     }
   });
 
@@ -160,8 +173,6 @@ content.education.forEach((item, i) => {
   checkPeriod(`education[${i}].period`, item.period);
 });
 
-const blank = (s: string): boolean => s.trim() === "";
-
 // Experience, education, timeline and skills (Spec 08).
 const experienceItems: readonly Experience[] = content.experience;
 experienceItems.forEach((item, i) => {
@@ -169,7 +180,9 @@ experienceItems.forEach((item, i) => {
   for (const key of ["role", "organization", "location", "employmentType"] as const) {
     if (blank(item[key])) fail(where, `${key} is empty`);
   }
-  if (item.highlights.length === 0) fail(where, "needs at least 1 highlight");
+  if (item.highlights.length < 1 || item.highlights.length > 4) {
+    fail(where, `needs 1-4 highlights (found ${item.highlights.length})`);
+  }
   if (item.highlights.some(blank)) fail(where, "has an empty highlight");
   if (item.tech.some(blank)) fail(where, "has an empty tech name");
 });
@@ -197,13 +210,23 @@ timeline.forEach((item, i) => {
 
 const skills: readonly SkillGroup[] = content.skills;
 const groupNames = new Set<string>();
-if (skills.length === 0) fail("skills", "must not be empty");
+if (skills.length < 3 || skills.length > 7) {
+  fail("skills", `must have 3-7 groups (found ${skills.length})`);
+}
+const skillGroupOf = new Map<string, string>();
 skills.forEach((group, i) => {
   const where = `skills[${group.name || i}]`;
   if (blank(group.name)) fail(where, "name is empty");
   if (groupNames.has(group.name)) fail(where, "duplicate group name");
   groupNames.add(group.name);
-  if (group.items.length === 0) fail(where, "needs at least 1 item");
+  if (group.items.length < 2 || group.items.length > 10) {
+    fail(where, `needs 2-10 items (found ${group.items.length})`);
+  }
+  for (const name of new Set(group.items)) {
+    const other = skillGroupOf.get(name);
+    if (other !== undefined) fail(where, `"${name}" is already in "${other}"`);
+    else skillGroupOf.set(name, group.name);
+  }
   if (group.items.some(blank)) fail(where, "has an empty item");
   const dupes = group.items.filter((name, j) => group.items.indexOf(name) !== j);
   if (dupes.length > 0) fail(where, `duplicate item(s): ${dupes.join(", ")}`);
@@ -235,7 +258,27 @@ if (!cv.fileName.endsWith(".pdf") || /[\\/]/.test(cv.fileName)) {
   fail("profile.links.cv", `fileName "${cv.fileName}" must end with .pdf and contain no slash`);
 }
 
-// Contact section (Spec 09).
+// About section (Spec 13).
+const about: readonly string[] = content.profile.about;
+if (about.length < 2 || about.length > 4) {
+  fail("profile.about", `must have 2-4 paragraphs (found ${about.length})`);
+}
+if (about.some(blank)) fail("profile.about", "has an empty paragraph");
+const aboutWords = about.join(" ").split(/\s+/).filter(Boolean).length;
+if (aboutWords > 130) fail("profile.about", `must be 130 words or fewer (found ${aboutWords})`);
+const photo = content.profile.photo;
+if (blank(photo.alt)) fail("profile.photo", "alt text is empty");
+if (!photo.src.startsWith("/images/about/") || !photo.src.endsWith(".webp")) {
+  fail("profile.photo", `src "${photo.src}" must start with /images/about/ and end with .webp`);
+} else {
+  checkWebp("profile.photo", photo.src, photo.width, photo.height);
+}
+
+// Contact section (Spec 09, heading Spec 13).
+const heading: string = content.profile.contactHeading.trim();
+if (heading === "" || heading.length > 80) {
+  fail("profile.contactHeading", `must be 1-80 characters (found ${heading.length})`);
+}
 const message: string = content.profile.contactMessage.trim();
 if (message === "" || message.length > 200) {
   fail("profile.contactMessage", `must be 1-200 characters (found ${message.length})`);

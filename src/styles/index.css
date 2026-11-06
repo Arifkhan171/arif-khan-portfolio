@@ -153,8 +153,11 @@
 }
 
 @layer base {
-  /* Anchor links land below the sticky navbar, with a little space above the eyebrow. */
-  section[id],
+  /* Anchor links land below the sticky navbar, with 24 px above the eyebrow (sections start with
+     their top padding, so it is subtracted). */
+  section[id] {
+    scroll-margin-top: calc(var(--spacing-header) + 1.5rem - var(--spacing-section));
+  }
   [id^="project-"] {
     scroll-margin-top: calc(var(--spacing-header) + 1.5rem);
   }

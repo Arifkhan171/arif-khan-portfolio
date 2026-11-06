@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useLayoutEffect, type ComponentType } from "react";
+import { Fragment, lazy, Suspense, useEffect, useLayoutEffect, type ComponentType } from "react";
 import { content } from "@/data/content";
 import { homeMeta } from "@/lib/meta";
 import { setPageMeta } from "@/lib/pageMeta";
@@ -14,6 +14,8 @@ import { Hero } from "@/components/sections/Hero";
 import { FeaturedProjects } from "@/components/sections/FeaturedProjects";
 import { Experience } from "@/components/sections/Experience";
 import { Skills } from "@/components/sections/Skills";
+import { About } from "@/components/sections/About";
+import { MoreProjects } from "@/components/sections/MoreProjects";
 
 const CaseStudyPage = lazy(withReload(loadCaseStudy));
 
@@ -21,7 +23,13 @@ const sections: Partial<Record<string, ComponentType>> = {
   projects: FeaturedProjects,
   experience: Experience,
   skills: Skills,
+  about: About,
   contact: Contact,
+};
+
+/** Sections that are not in the navbar, rendered right after the given nav section. */
+const followers: Partial<Record<string, ComponentType>> = {
+  experience: MoreProjects,
 };
 
 function HomePage() {
@@ -31,7 +39,13 @@ function HomePage() {
       <Hero />
       {navigation.map((item) => {
         const Component = sections[item.id];
-        return Component && <Component key={item.id} />;
+        const Follower = followers[item.id];
+        return (
+          <Fragment key={item.id}>
+            {Component && <Component />}
+            {Follower && <Follower />}
+          </Fragment>
+        );
       })}
     </>
   );

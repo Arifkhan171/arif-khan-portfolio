@@ -1,7 +1,6 @@
 import { content } from "@/data/content";
 import { getFeaturedProjects } from "@/lib/projects";
 import { Section } from "@/components/ui/Section";
-import { OtherProjects } from "@/components/sections/OtherProjects";
 import { ProjectCard } from "@/components/sections/ProjectCard";
 
 export function FeaturedProjects() {
@@ -20,7 +19,6 @@ export function FeaturedProjects() {
           </div>
         )}
       </div>
-      <OtherProjects />
     </Section>
   );
 }

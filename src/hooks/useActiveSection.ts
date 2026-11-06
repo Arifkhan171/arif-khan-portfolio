@@ -23,7 +23,15 @@ export function useActiveSection(ids: readonly string[]): string | null {
     };
     const observer = new IntersectionObserver(
       (entries) => {
-        for (const entry of entries) inBand.set(entry.target.id, entry.isIntersecting);
+        // "Reached": in the band, or already scrolled above it. A section between two nav sections
+        // (More projects) then keeps the one above it active.
+        for (const entry of entries) {
+          const bandTop = entry.rootBounds?.top ?? HEADER_PX;
+          inBand.set(
+            entry.target.id,
+            entry.isIntersecting || entry.boundingClientRect.top < bandTop,
+          );
+        }
         update();
       },
       { rootMargin: `-${HEADER_PX}px 0px -60% 0px`, threshold: 0 },

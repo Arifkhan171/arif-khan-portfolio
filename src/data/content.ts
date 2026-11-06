@@ -23,9 +23,16 @@ export const content = {
       "I build production LLM systems (multi-agent RAG) and deep-learning models for brain MRI.",
     summary:
       "AI Engineer at the University of Loralai, where I build and run a production multi-agent chatbot used across 10 university departments. Building AI systems since 2023, with a BS in Computer Science (CGPA 3.73).",
+    about: [
+      "I build AI systems that real people use. At the University of Loralai I designed and run a multi-agent chatbot that answers questions for students and staff, and I measure every change before it goes live.",
+      "I started with classic machine learning in 2023, moved to deep learning, and led a team of three on NeuroAI, a brain-MRI tumor segmentation system.",
+      "Next, I want to join a team that builds LLM agents or applied ML in production, where evaluation and reliability matter as much as the demo.",
+    ],
+    photo: { src: "/images/about/arif-khan.webp", alt: "Arif Khan", width: 480, height: 480 },
     location: "Loralai, Balochistan, Pakistan",
     timezone: "UTC+5",
     availability: "Open to remote AI roles",
+    contactHeading: "Looking for an AI engineer? Let's talk.",
     contactMessage:
       "I'm looking for AI engineering roles where I can build LLM agents, RAG systems and production ML. Email is the fastest way to reach me.",
     buildingSince: 2023,
@@ -57,6 +64,7 @@ export const content = {
   // Navbar links, in order. Each id must match a section id on the page.
   navigation: [
     { id: "projects", label: "Projects" },
+    { id: "about", label: "About" },
     { id: "experience", label: "Experience" },
     { id: "skills", label: "Skills" },
     { id: "contact", label: "Contact" },
@@ -305,7 +313,7 @@ export const content = {
       problem: "Teachers need to spot at-risk students early, before final results.",
       role: "Solo project",
       period: { start: "2024-01", end: "2024-10" },
-      metrics: [{ value: "98%", label: "R² score" }],
+      metrics: [{ value: "98%", label: "R²", method: "20% held-out test set" }],
       highlights: [],
       tech: ["Python", "Scikit-learn", "XGBoost", "SHAP", "Streamlit"],
       images: [],
@@ -339,8 +347,8 @@ export const content = {
       problem: "Spam messages waste time, and blocking a real message by mistake is costly.",
       role: "Solo project",
       metrics: [
+        { value: "100%", label: "precision", method: "20% held-out test set" },
         { value: "97%", label: "accuracy" },
-        { value: "100%", label: "precision" },
       ],
       highlights: [],
       tech: ["Python", "NLTK", "Scikit-learn", "Naive Bayes", "Streamlit"],
@@ -485,14 +493,13 @@ export const content = {
       role: "AI Engineer",
       organization: "University of Loralai",
       location: "Loralai, Pakistan",
-      employmentType: "Paid position",
+      employmentType: "Remote",
       period: { start: "2025-02", end: "present" },
       highlights: [
-        "Architected a production multi-agent LLM chatbot (LangChain, LangGraph, FastAPI) with a Supervisor pattern across 6 specialized pipelines, serving 10 departments",
-        "Built Graph RAG with BM25 hybrid search and Cross-Encoder re-ranking on ChromaDB and Redis, indexing 7,021 documents across 500+ pages",
-        "Raised RAGAS scores: Faithfulness 0.75 → 0.85, Answer Relevancy 0.77 → 0.87, Context Recall 0.60 → 0.85; monitored all LLM calls with LangSmith",
-        "Containerized the system with Docker and coordinated all release cycles",
-        "Worked with faculty stakeholders from requirements to production launch, with biweekly milestone updates",
+        "Own the system architecture: a Supervisor agent that routes each question to the right specialized pipeline (LangChain, LangGraph, FastAPI)",
+        "Designed the retrieval stack: Graph RAG with BM25 hybrid search and Cross-Encoder re-ranking on ChromaDB and Redis",
+        "Set up the evaluation process (RAGAS, DeepEval) and LangSmith tracing, so every change is measured before release",
+        "Run releases with Docker and work with faculty stakeholders from requirements to launch, with biweekly updates",
       ],
       tech: [
         "LangChain",
@@ -515,14 +522,6 @@ export const content = {
       institution: "University of Loralai",
       period: { start: "2022-08", end: "2026-08" },
       grade: "CGPA 3.73 / 4.0",
-      coursework: [
-        "Machine Learning",
-        "Deep Learning",
-        "Natural Language Processing",
-        "Data Structures and Algorithms",
-        "Database Systems",
-        "Software Engineering",
-      ],
     },
   ],
 
@@ -550,7 +549,6 @@ export const content = {
       items: [
         "LangChain",
         "LangGraph",
-        "LangSmith",
         "Multi-Agent Systems",
         "Tool Calling",
         "Prompt Engineering",
@@ -560,42 +558,27 @@ export const content = {
       ],
     },
     {
-      name: "RAG & Vector Databases",
+      name: "RAG & Retrieval",
       items: [
         "Graph RAG",
         "Hybrid Search (BM25 + Vector)",
+        "Cross-Encoder Re-Ranking",
         "ChromaDB",
         "Redis",
         "FAISS",
-        "Embeddings",
-        "Parent-Child Retrieval",
-        "Cross-Encoder Re-Ranking",
       ],
     },
     {
       name: "Evaluation & Observability",
-      items: ["RAGAS", "DeepEval", "LangSmith Tracing", "Hallucination Detection"],
+      items: ["RAGAS", "DeepEval", "LangSmith", "Hallucination Detection"],
     },
     {
       name: "Deep Learning & ML",
-      items: [
-        "PyTorch",
-        "TensorFlow",
-        "MONAI",
-        "Scikit-learn",
-        "XGBoost",
-        "Computer Vision",
-        "Image Segmentation",
-        "NLP",
-      ],
+      items: ["PyTorch", "TensorFlow", "MONAI", "Scikit-learn", "XGBoost", "Image Segmentation"],
     },
     {
       name: "Backend & MLOps",
-      items: ["Python", "FastAPI", "Docker", "GitHub Actions", "SQL", "PostgreSQL", "Streamlit"],
-    },
-    {
-      name: "Data & Visualization",
-      items: ["NumPy", "Pandas", "Matplotlib", "Seaborn", "Plotly", "SHAP"],
+      items: ["Python", "FastAPI", "Docker", "GitHub Actions", "PostgreSQL", "Streamlit"],
     },
   ],
 } as const satisfies SiteContent;

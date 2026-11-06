@@ -12,14 +12,14 @@ type SectionProps = {
   children?: ReactNode;
 };
 
-/** Page section with the standard vertical spacing and an optional eyebrow + title. */
+/** Page section with the standard top spacing (one gap between sections; the last section adds `pb-section`) and an optional eyebrow + title. */
 export function Section({ id, eyebrow, title, className, children }: SectionProps) {
   const titleId = title ? `${id}-title` : undefined;
   // The number is the section's position in the navbar, so it always matches the menu.
   const index = content.navigation.findIndex((item) => item.id === id);
   const number = index >= 0 ? String(index + 1).padStart(2, "0") : null;
   return (
-    <section id={id} aria-labelledby={titleId} className={cn("py-section", className)}>
+    <section id={id} aria-labelledby={titleId} className={cn("pt-section", className)}>
       <Container>
         {(eyebrow || title) && (
           <header className="mb-7 md:mb-10">

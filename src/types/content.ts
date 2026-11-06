@@ -18,6 +18,17 @@ export type Stat = {
   readonly label: string;
   /** Featured project the number belongs to (hero stats show its name). */
   readonly projectId?: string;
+  /** How the number was measured, e.g. "20% held-out test set" (shown in More projects). */
+  readonly method?: string;
+};
+
+/** A square photo with its real pixel size (the validator checks it). */
+export type Photo = {
+  /** Path under public/, e.g. "/images/about/arif-khan.webp". */
+  readonly src: string;
+  readonly alt: string;
+  readonly width: number;
+  readonly height: number;
 };
 
 export type SiteMeta = {
@@ -42,6 +53,12 @@ export type Profile = {
   /** Shown after the location, e.g. "UTC+5". */
   readonly timezone: string;
   readonly availability: string;
+  /** About section: 2-4 short paragraphs (130 words at most). */
+  readonly about: readonly string[];
+  /** Portrait for the About section, shown as a circle. */
+  readonly photo: Photo;
+  /** Heading of the contact section. */
+  readonly contactHeading: string;
   /** 1-2 sentences for the contact section. */
   readonly contactMessage: string;
   /** Year the person started building AI/ML projects. */
@@ -129,7 +146,6 @@ export type Education = {
   readonly institution: string;
   readonly period: Period;
   readonly grade: string;
-  readonly coursework: readonly string[];
 };
 
 export type TimelineItem = {
