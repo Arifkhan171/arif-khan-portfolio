@@ -16,6 +16,8 @@ export type Period = {
 export type Stat = {
   readonly value: string;
   readonly label: string;
+  /** Featured project the number belongs to (hero stats show its name). */
+  readonly projectId?: string;
 };
 
 export type SiteMeta = {
@@ -37,6 +39,8 @@ export type Profile = {
   readonly tagline: string;
   readonly summary: string;
   readonly location: string;
+  /** Shown after the location, e.g. "UTC+5". */
+  readonly timezone: string;
   readonly availability: string;
   /** 1-2 sentences for the contact section. */
   readonly contactMessage: string;
@@ -50,6 +54,8 @@ export type Profile = {
   };
   /** Headline numbers for the hero section. */
   readonly stats: readonly Stat[];
+  /** Featured project ids shown as tabs in the hero "How it works" card, in order (1-3). */
+  readonly heroProjects: readonly string[];
 };
 
 export type ProjectImage = {
@@ -82,6 +88,8 @@ export type Project = {
   /** Lowercase URL slug, unique. Also the image folder name. */
   readonly id: string;
   readonly title: string;
+  /** Short name for tight places (hero stat chips). Falls back to the title. */
+  readonly shortTitle?: string;
   readonly subtitle: string;
   readonly tier: ProjectTier;
   /** Sort order inside the tier. */

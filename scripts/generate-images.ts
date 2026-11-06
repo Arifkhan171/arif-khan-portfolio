@@ -8,6 +8,7 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { content } from "../src/data/content.ts";
 import { initials } from "../src/lib/format.ts";
+import type { Project } from "../src/types/content.ts";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const work = mkdtempSync(join(tmpdir(), "portfolio-images-"));
@@ -65,6 +66,12 @@ const stats = profile.stats.slice(0, 3);
 const font = (pkg: string, file: string): string =>
   fileUrl("node_modules", "@fontsource-variable", pkg, "files", file);
 
+const chip = (projectId: string | undefined): string => {
+  const projects: readonly Project[] = content.projects;
+  const project = projects.find((p) => p.id === projectId);
+  return project ? `<div class="c">${esc(project.shortTitle ?? project.title)}</div>` : "";
+};
+
 const ogHtml = `<!doctype html><html class="dark"><head><meta charset="utf-8"><style>
 @font-face{font-family:Inter;src:url(${font("inter", "inter-latin-wght-normal.woff2")});font-weight:100 900}
 @font-face{font-family:Mono;src:url(${font("jetbrains-mono", "jetbrains-mono-latin-wght-normal.woff2")});font-weight:100 800}
@@ -80,11 +87,12 @@ h1{margin-top:64px;font-size:88px;font-weight:650;letter-spacing:-.04em;line-hei
 .title{margin-top:16px;font-size:40px;font-weight:500;color:var(--foreground);letter-spacing:-.01em}
 .stats{position:absolute;left:80px;right:80px;bottom:64px;display:grid;grid-template-columns:repeat(3,1fr);gap:32px;border-top:1px solid var(--border);padding-top:28px}
 .v{font:600 44px Mono;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.c{font:500 16px Mono;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;margin-bottom:8px}
 .l{margin-top:6px;font-size:20px;color:var(--muted);line-height:1.35}
 </style></head><body>
 <div class="rel top"><div class="mono">${esc(initials(profile.name))}</div><div class="host">${esc(profile.availability)}</div></div>
 <h1 class="rel">${esc(profile.name)}</h1><p class="rel title">${esc(profile.title)}</p>
-<div class="stats">${stats.map((s) => `<div><div class="v">${esc(s.value)}</div><div class="l">${esc(s.label)}</div></div>`).join("")}</div>
+<div class="stats">${stats.map((s) => `<div>${chip(s.projectId)}<div class="v">${esc(s.value)}</div><div class="l">${esc(s.label)}</div></div>`).join("")}</div>
 </body></html>`;
 shoot("og", ogHtml, 1200, 630, join(root, "public/og/og-default.png"));
 

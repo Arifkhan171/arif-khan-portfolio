@@ -11,9 +11,9 @@ import { getFeaturedProjects } from "../src/lib/projects.ts";
 
 /**
  * Main JS budget in kB gzip (Spec 10). Raise it only on purpose. This script measures plain gzip, which
- * is about 0.9 % below the number "vite build" prints: 102.0 here = the 103.0 kB approved in the plan review.
+ * is about 0.9 % below the number "vite build" prints: 102.5 here = the 103.5 kB approved in the Spec 12 plan review.
  */
-const MAIN_JS_BUDGET_KB = 102.0;
+const MAIN_JS_BUDGET_KB = 102.5;
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const dist = join(root, "dist");

@@ -1,23 +1,39 @@
 import { m, type Variants } from "motion/react";
 import { content } from "@/data/content";
-import { formatPeriod } from "@/lib/format";
+import { formatPeriod, keepHyphensTogether } from "@/lib/format";
 import { useMotionPresets } from "@/lib/animations";
-import { getFeaturedProjects, projectPath } from "@/lib/projects";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { InlineSep } from "@/components/ui/InlineSep";
-import { ArrowRightIcon, DownloadIcon, MapPinIcon } from "@/components/ui/icons";
+import { DownloadIcon, MapPinIcon } from "@/components/ui/icons";
 import { SocialLinks } from "@/components/layout/SocialLinks";
-import { PipelineSteps } from "@/components/sections/PipelineSteps";
+import { SystemTrace } from "@/components/sections/SystemTrace";
+import type { Project } from "@/types/content";
 
 // Containers only change timing (no position), so they are safe with reduced motion.
 const heroStagger: Variants = { hidden: {}, visible: { transition: { staggerChildren: 0.05 } } };
 
 const { profile, projects, experience } = content;
 const current = experience[0];
-const heroProject = getFeaturedProjects(projects)[0];
-const steps = heroProject?.architecture ?? [];
+const projectById = new Map<string, Project>(projects.map((p) => [p.id, p]));
+const heroProjects = profile.heroProjects.flatMap((id) => projectById.get(id) ?? []);
+
+/** "0.75 → 0.85": the start value is smaller, so the stat fits its column; read as "0.75 to 0.85". */
+function StatValue({ value }: { value: string }) {
+  const [from, to] = value.split(" → ");
+  if (to === undefined) return value;
+  return (
+    <>
+      <span className="text-[0.5em] tracking-normal text-muted">
+        {from}
+        <span aria-hidden="true"> → </span>
+        <span className="sr-only"> to </span>
+      </span>
+      {to}
+    </>
+  );
+}
 
 export function Hero() {
   const { staggerItem } = useMotionPresets();
@@ -26,7 +42,7 @@ export function Hero() {
   return (
     <section
       aria-labelledby="hero-title"
-      className="relative isolate -mt-header overflow-hidden pt-[calc(var(--spacing-header)+2.5rem)] pb-16 lg:pt-[calc(var(--spacing-header)+3rem)] lg:pb-24"
+      className="relative isolate -mt-header overflow-hidden pt-[calc(var(--spacing-header)+2.5rem)] lg:pt-[calc(var(--spacing-header)+3rem)]"
     >
       <Container>
         <m.div
@@ -48,7 +64,11 @@ export function Hero() {
               </Badge>
               <p className="inline-flex items-center gap-1.5 text-caption text-muted">
                 <MapPinIcon size={14} />
-                {profile.location}
+                <span>
+                  {profile.location}
+                  <InlineSep />
+                  <span className="whitespace-nowrap">{profile.timezone}</span>
+                </span>
               </p>
             </m.div>
 
@@ -63,7 +83,7 @@ export function Hero() {
               {profile.title}
             </m.p>
             <m.p variants={staggerItem} className="mt-5 max-w-prose text-lead text-foreground">
-              {profile.tagline}
+              {keepHyphensTogether(profile.tagline)}
             </m.p>
 
             {current && (
@@ -107,51 +127,41 @@ export function Hero() {
             variants={heroStagger}
             className="mt-14 grid grid-cols-2 gap-x-6 gap-y-8 border-t border-border pt-6 lg:col-span-2 lg:row-start-2 lg:grid-cols-4 lg:gap-0"
           >
-            {profile.stats.map((stat) => (
-              <m.li
-                key={stat.label}
-                variants={staggerItem}
-                className="lg:border-l lg:border-border lg:px-6 lg:first:border-l-0 lg:first:pl-0"
-              >
-                <span className="block font-mono text-h2 font-medium tracking-[-0.02em] tabular-nums">
-                  {stat.value}
-                </span>
-                <span className="mt-1 block max-w-[22ch] text-small text-muted">{stat.label}</span>
-              </m.li>
-            ))}
+            {profile.stats.map((stat) => {
+              const project = stat.projectId ? projectById.get(stat.projectId) : undefined;
+              return (
+                <m.li
+                  key={stat.label}
+                  variants={staggerItem}
+                  className="lg:border-l lg:border-border lg:px-6 lg:first:border-l-0 lg:first:pl-0"
+                >
+                  {project && (
+                    <>
+                      <span
+                        aria-hidden="true"
+                        className="block font-mono text-caption tracking-[0.08em] text-muted uppercase"
+                      >
+                        {project.shortTitle ?? project.title}
+                      </span>
+                      <span className="sr-only">{project.title}: </span>
+                    </>
+                  )}
+                  <span className="mt-1.5 block font-mono text-h2 font-medium tracking-[-0.02em] whitespace-nowrap tabular-nums">
+                    <StatValue value={stat.value} />
+                  </span>
+                  <span className="mt-1 block text-small text-muted">{stat.label}</span>
+                </m.li>
+              );
+            })}
           </m.ul>
 
-          {heroProject && steps.length > 0 && (
-            // Same base classes as `Card` (not used: it can only animate together with the hover lift).
-            <m.article
+          {heroProjects.length > 0 && (
+            <m.div
               variants={staggerItem}
-              aria-labelledby="hero-pipeline-title"
-              className="mt-12 w-full max-w-xl rounded-lg border border-border bg-surface p-5 shadow-trace md:p-8 lg:col-start-2 lg:row-start-1 lg:mt-0 lg:max-w-none"
+              className="mt-12 w-full max-w-xl rounded-lg border border-border bg-surface shadow-trace lg:col-start-2 lg:row-start-1 lg:mt-0 lg:max-w-none"
             >
-              <p
-                aria-hidden="true"
-                className="font-mono text-caption tracking-[0.08em] text-muted uppercase"
-              >
-                How it works
-              </p>
-              <h2 id="hero-pipeline-title" className="mt-2 text-body font-semibold">
-                <span className="sr-only">How it works: </span>
-                {heroProject.title}
-              </h2>
-              <p className="mt-0.5 text-small text-muted">{heroProject.subtitle}</p>
-
-              <PipelineSteps steps={steps} className="mt-5" />
-
-              <div className="mt-5 border-t border-border pt-1">
-                <a
-                  href={projectPath(heroProject.id)}
-                  className="inline-flex h-11 items-center gap-1.5 text-small font-medium text-accent underline-offset-3 hover:underline"
-                >
-                  See the project
-                  <ArrowRightIcon size={16} />
-                </a>
-              </div>
-            </m.article>
+              <SystemTrace projects={heroProjects} />
+            </m.div>
           )}
         </m.div>
       </Container>

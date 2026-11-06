@@ -39,6 +39,11 @@ export function initials(name: string): string {
     .join("");
 }
 
+/** "multi-agent" never splits at the hyphen: hyphens become non-breaking hyphens (U+2011). Content stays unchanged. */
+export function keepHyphensTogether(text: string): string {
+  return text.replaceAll("-", "\u2011");
+}
+
 /** "0.75 → 0.85" never splits: the spaces around the arrow become non-breaking. Content stays unchanged. */
 export function keepArrowsTogether(text: string): string {
   return text.replaceAll(" → ", "\u00A0→\u00A0");

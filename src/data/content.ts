@@ -20,10 +20,11 @@ export const content = {
     name: "Arif Khan",
     title: "Agentic AI Engineer",
     tagline:
-      "I build production LLM systems end to end: multi-agent workflows, RAG pipelines and medical deep learning.",
+      "I build production LLM systems (multi-agent RAG) and deep-learning models for brain MRI.",
     summary:
       "AI Engineer at the University of Loralai, where I build and run a production multi-agent chatbot used across 10 university departments. Building AI systems since 2023, with a BS in Computer Science (CGPA 3.73).",
     location: "Loralai, Balochistan, Pakistan",
+    timezone: "UTC+5",
     availability: "Open to remote AI roles",
     contactMessage:
       "I'm looking for AI engineering roles where I can build LLM agents, RAG systems and production ML. Email is the fastest way to reach me.",
@@ -35,11 +36,21 @@ export const content = {
       cv: { href: "/cv/Arif-Khan-CV.pdf", fileName: "Arif-Khan-CV.pdf" },
     },
     stats: [
-      { value: "7,021", label: "documents indexed in production RAG" },
-      { value: "10", label: "university departments served" },
-      { value: ">89%", label: "Whole Tumor Dice (brain MRI)" },
-      { value: "0.85", label: "RAGAS faithfulness (up from 0.75)" },
+      {
+        value: "7,021",
+        label: "documents indexed in production RAG",
+        projectId: "uoli-ai-assistant",
+      },
+      { value: "10", label: "university departments using it", projectId: "uoli-ai-assistant" },
+      { value: ">89%", label: "tumor segmentation overlap (Dice score)", projectId: "neuroai" },
+      {
+        value: "0.75 → 0.85",
+        label: "answer faithfulness (RAGAS)",
+        projectId: "uoli-ai-assistant",
+      },
     ],
+    // Tabs of the hero "How it works" card (featured projects with an architecture), in order.
+    heroProjects: ["uoli-ai-assistant", "neuroai"],
   },
 
   // ---------------------------------------------------------- navigation
@@ -57,6 +68,7 @@ export const content = {
     {
       id: "uoli-ai-assistant",
       title: "UOLI AI Assistant",
+      shortTitle: "UOLI",
       subtitle: "Production multi-agent university chatbot",
       tier: "featured",
       order: 1,

@@ -249,16 +249,45 @@ stats.forEach((stat, i) => {
     fail(`profile.stats[${i}]`, "value and label must not be empty");
   }
 });
+const projectById = new Map<string, Project>(projects.map((p) => [p.id, p]));
+const tagline = content.profile.tagline.trim();
+if (tagline === "" || tagline.length > 140) {
+  fail("profile.tagline", `must be 1-140 characters (found ${tagline.length})`);
+}
+stats.forEach((stat, i) => {
+  if (stat.projectId === undefined) return;
+  const project = projectById.get(stat.projectId);
+  if (project?.tier !== "featured") {
+    fail(`profile.stats[${i}]`, `projectId "${stat.projectId}" is not a featured project`);
+  }
+});
+const heroIds: readonly string[] = content.profile.heroProjects;
+if (heroIds.length < 1 || heroIds.length > 3) {
+  fail("profile.heroProjects", `must have 1-3 ids (found ${heroIds.length})`);
+}
+heroIds.forEach((id, i) => {
+  if (heroIds.indexOf(id) !== i) fail("profile.heroProjects", `duplicate id "${id}"`);
+  const project = projectById.get(id);
+  if (project?.tier !== "featured") {
+    fail("profile.heroProjects", `"${id}" is not a featured project`);
+  } else {
+    if ((project.architecture ?? []).length === 0) {
+      fail("profile.heroProjects", `"${id}" has no architecture`);
+    }
+    if (blank(project.subtitle)) fail("profile.heroProjects", `"${id}" has an empty subtitle`);
+  }
+});
+if (!/^UTC[+-]\d{1,2}(:\d{2})?$/.test(content.profile.timezone)) {
+  fail("profile.timezone", `"${content.profile.timezone}" must look like UTC+5 or UTC-3:30`);
+}
+projects.forEach((project) => {
+  const short = project.shortTitle;
+  if (short !== undefined && (short.trim() === "" || short.length > 12)) {
+    fail(`projects[${project.id}].shortTitle`, "must be 1-12 characters");
+  }
+});
 const experienceCount: number = content.experience.length;
 if (experienceCount === 0) fail("experience", "must not be empty (hero Currently line)");
-const heroProject = projects
-  .filter((p) => p.tier === "featured")
-  .toSorted((a, b) => a.order - b.order)[0];
-if (heroProject === undefined) {
-  fail("projects", "needs a featured project (hero pipeline card)");
-} else {
-  if (heroProject.subtitle.trim() === "") fail(`projects[${heroProject.id}]`, "subtitle is empty");
-}
 
 // Site meta (Spec 10). The head tags are generated from content, so index.html must not hold a copy.
 try {

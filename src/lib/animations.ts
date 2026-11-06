@@ -1,7 +1,7 @@
 import { useReducedMotion, type HTMLMotionProps, type Variants } from "motion/react";
 
-/** Durations in seconds. Nothing in the site is longer than `slow`. */
-export const duration = { fast: 0.15, base: 0.3, reveal: 0.4, slow: 0.5 } as const;
+/** Durations in seconds. Nothing in the site is longer than `slow`, except the one-time hero line `draw`. */
+export const duration = { fast: 0.15, base: 0.3, reveal: 0.4, slow: 0.5, draw: 0.6 } as const;
 /** The one ease-out curve. Same as `--ease-out` in src/styles/index.css. */
 export const easeOut = [0.22, 1, 0.36, 1] as const;
 
