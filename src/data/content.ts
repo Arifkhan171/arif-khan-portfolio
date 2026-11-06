@@ -135,7 +135,7 @@ export const content = {
         {
           src: "/images/projects/uoli-ai-assistant/02-multi-turn-qa.webp",
           width: 1579,
-          height: 786,
+          height: 726,
           alt: "Multi-turn conversation answering university questions",
           caption: "Multi-turn answers on admissions, fees and faculty from 7,021 documents",
         },
@@ -271,14 +271,14 @@ export const content = {
         {
           src: "/images/projects/acadtrack/01-coordinator-dashboard.webp",
           width: 1600,
-          height: 671,
+          height: 646,
           alt: "Coordinator dashboard for uploading mark sheets",
           caption: "Coordinators upload and approve semester mark sheets before GPA calculation",
         },
         {
           src: "/images/projects/acadtrack/02-student-grades.webp",
           width: 1600,
-          height: 713,
+          height: 662,
           alt: "Student grades view with CGPA",
           caption: "Students see CGPA, semester breakdown and letter grades",
         },
@@ -292,7 +292,7 @@ export const content = {
         {
           src: "/images/projects/acadtrack/04-login.webp",
           width: 1600,
-          height: 669,
+          height: 610,
           alt: "Role-based login screen",
           caption: "Each role sees a different dashboard and permissions",
         },
