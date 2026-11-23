@@ -1,4 +1,4 @@
-import type { Project, ProjectTier } from "../types/content.ts";
+import type { Project, ProjectImage, ProjectTier } from "../types/content.ts";
 
 /** Projects of one tier, in display order. */
 export function getProjectsByTier(
@@ -25,4 +25,9 @@ export function youtubeWatchUrl(youtubeId: string): string {
 /** URL of a featured project's case study page, e.g. "/projects/neuroai". */
 export function projectPath(id: string): string {
   return `/projects/${id}`;
+}
+
+/** The project's cover image (`coverIndex`, default the first image). */
+export function projectCover(project: Project): ProjectImage | undefined {
+  return project.images[project.coverIndex ?? 0];
 }

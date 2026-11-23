@@ -124,11 +124,33 @@ export type Project = {
   /** Ordered steps, for the diagram in the project detail view. */
   readonly architecture?: readonly string[];
   readonly tech: readonly string[];
-  /** The first image is the cover. */
   readonly images: readonly ProjectImage[];
+  /** Index in `images` of the cover (home row and video poster). Default 0. */
+  readonly coverIndex?: number;
   readonly video?: ProjectVideo;
   readonly repo: ProjectRepo;
   readonly demoUrl?: string;
+};
+
+/** One design choice and the reason for it (case-study page). */
+export type Decision = {
+  readonly title: string;
+  /** 1-3 sentences, at most 300 characters. */
+  readonly why: string;
+};
+
+/** Case-study-only text for a featured project (src/data/caseStudies.ts, keyed by project id). */
+export type CaseStudyDetails = {
+  /** Shown in "At a glance", e.g. "In production" or "Completed". */
+  readonly status: string;
+  /** One shared line under the Results heading (e.g. what Dice means). */
+  readonly resultsNote?: string;
+  /** One-line meaning of a result, keyed by the metric's exact `label`. */
+  readonly definitions?: Readonly<Record<string, string>>;
+  /** 2-3 items. */
+  readonly decisions?: readonly Decision[];
+  /** 1-2 items. */
+  readonly improvements?: readonly string[];
 };
 
 export type Experience = {

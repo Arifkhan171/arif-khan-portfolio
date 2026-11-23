@@ -140,6 +140,7 @@ export const content = {
           caption: "Multi-turn answers on admissions, fees and faculty from 7,021 documents",
         },
       ],
+      coverIndex: 1,
       video: { youtubeId: "YpSCygFuMA8", title: "UOLI AI Assistant demo" },
       repo: {
         visibility: "private",
@@ -245,7 +246,7 @@ export const content = {
         "An autonomous LangGraph workflow that calculates GPA, parses transcripts and analyzes academic performance, with 100% compliance with HEC Pakistan grading rules.",
       problem:
         "GPA calculation and transcript preparation were manual, slow and error-prone for university coordinators and examination staff.",
-      role: "AI Engineer",
+      role: "Tech Lead (team of 3)",
       period: { start: "2025-09", end: "2026-01" },
       metrics: [
         { value: "100%", label: "HEC formula compliance" },
@@ -254,7 +255,6 @@ export const content = {
       highlights: [
         "Autonomous LangGraph pipeline for GPA calculation, transcript parsing and performance analysis",
         "Calculation logic validated against official HEC Pakistan grading rubrics",
-        "Conversational Streamlit interface: students ask about standing, semesters and degree progress in plain language",
         "Role-based access (Student, Coordinator, Controller of Examinations)",
         "QR-verified PDF transcripts with full audit logging",
       ],
@@ -266,7 +266,16 @@ export const content = {
         "Transcript generation with QR verification",
         "Role-based dashboards",
       ],
-      tech: ["Python", "LangChain", "LangGraph", "SQLAlchemy", "PostgreSQL", "Streamlit"],
+      tech: [
+        "Python",
+        "LangChain",
+        "LangGraph",
+        "FastAPI",
+        "Next.js",
+        "SQLAlchemy",
+        "PostgreSQL",
+        "Streamlit",
+      ],
       images: [
         {
           src: "/images/projects/acadtrack/01-coordinator-dashboard.webp",

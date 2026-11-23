@@ -70,13 +70,13 @@ All personal text lives in **one file**: `src/data/content.ts`. The shapes are i
 
 The hero (`src/components/sections/Hero.tsx`) reads: `profile` (name, title, tagline, availability, location, `stats` — exactly 4, links), the first item of `experience` (the "Currently" line) and the first `featured` project by `order` (its `title`, `subtitle` and `architecture` steps fill the "How it works" card).
 
-Every `featured` project also gets a case study page at `/projects/<id>`. It needs a non-empty `problem`, at least 2 `highlights` and at least 3 `architecture` steps (the build checks this).
+Every `featured` project also gets a case study page at `/projects/<id>`. It needs a non-empty `problem`, at least 2 `highlights` and at least 3 `architecture` steps (the build checks this). Its key decisions, "What I'd improve", status and result definitions live in `src/data/caseStudies.ts` (keyed by project id, checked by the validator).
 
 Add a project:
 
 1. Copy an existing project object in `projects` in `src/data/content.ts`. Give it a new lowercase `id` (for example `my-new-project`).
 2. Choose its `tier` and an `order` (unique inside the tier).
-3. Put images in `public/images/projects/<id>/` as `.webp` (max 1600 px wide, max 250 KB) and list them in `images`. The first image is the cover. Each image needs its real `width` and `height` in pixels (the validator checks them against the file).
+3. Put images in `public/images/projects/<id>/` as `.webp` (max 1600 px wide, max 250 KB) and list them in `images`. The first image is the cover unless you set `coverIndex` (the index in `images`). Each image needs its real `width` and `height` in pixels (the validator checks them against the file).
 4. Run `npm run validate:content` and `npm run typecheck`.
 
 Tiers:

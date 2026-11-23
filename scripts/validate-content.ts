@@ -3,6 +3,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { caseStudies } from "../src/data/caseStudies.ts";
 import { content } from "../src/data/content.ts";
 import type {
   Experience,
@@ -123,6 +124,12 @@ function checkProject(project: Project, index: number): void {
       checkWebp(at, image.src, image.width, image.height);
     }
   });
+  if (
+    project.coverIndex !== undefined &&
+    (!Number.isInteger(project.coverIndex) || project.images[project.coverIndex] === undefined)
+  ) {
+    fail(`${where}.coverIndex`, `${project.coverIndex} is not an index in images`);
+  }
   project.metrics.forEach((metric, i) => {
     const method = metric.method;
     if (method !== undefined && (blank(method) || method.length > 40)) {
@@ -165,6 +172,37 @@ projects.forEach((project, index) => {
   orders.add(orderKey);
   checkProject(project, index);
 });
+
+// Case-study-only text (src/data/caseStudies.ts).
+for (const [id, details] of Object.entries(caseStudies)) {
+  const where = `caseStudies[${id}]`;
+  const project = projects.find((p) => p.id === id);
+  if (project?.tier !== "featured") fail(where, "id is not a featured project");
+  if (blank(details.status)) fail(where, "status is empty");
+  if (details.resultsNote !== undefined && blank(details.resultsNote)) {
+    fail(where, "resultsNote is empty");
+  }
+  for (const [label, definition] of Object.entries(details.definitions ?? {})) {
+    if (blank(definition)) fail(`${where}.definitions[${label}]`, "is empty");
+    if (project && !project.metrics.some((metric) => metric.label === label)) {
+      fail(`${where}.definitions[${label}]`, "does not match a metric label");
+    }
+  }
+  const { decisions, improvements } = details;
+  if (decisions && (decisions.length < 2 || decisions.length > 3)) {
+    fail(where, `needs 2-3 decisions (found ${decisions.length})`);
+  }
+  decisions?.forEach((decision, i) => {
+    const at = `${where}.decisions[${i}]`;
+    if (blank(decision.title)) fail(at, "title is empty");
+    if (blank(decision.why)) fail(at, "why is empty");
+    if (decision.why.length > 300) fail(at, `why is ${decision.why.length} characters (max 300)`);
+  });
+  if (improvements && (improvements.length < 1 || improvements.length > 2)) {
+    fail(where, `needs 1-2 improvements (found ${improvements.length})`);
+  }
+  if (improvements?.some(blank)) fail(where, "has an empty improvement");
+}
 
 content.experience.forEach((item, i) => {
   checkPeriod(`experience[${i}].period`, item.period);
